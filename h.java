@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.event.*;
 
 class ActionEventPanel extends JPanel implements ActionListener {
+
+    //Color backgrounfColor = new Color(128, 100, 100); // creates helper object:
     // Create two buttons
     private JButton jbtOk = new JButton("OK");
     private JButton jbtCancel = new JButton("Cancel");
@@ -39,12 +41,24 @@ class ActionEventPanel extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
     public static void main(String[] args) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         JFrame frame = new JFrame("ActionEventPanel");
         JPanel panel = new JPanel(); // creates another component
         frame.add(panel); // put panel in frame
-         JOptionPane.showMessageDialog(frame.getComponent(0), "Hello World");
-        SwingUtilities.invokeLater(() -> {
-            new ActionEventPanel().buildGUI();
-        });
+        ImageIcon img = new ImageIcon("backgrond.jpg");
+             
+        frame.setContentPane(new JLabel(img));
+        
+       
+
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.setSize(1200, 1000);
+        frame.setVisible(true);
+         //JOptionPane.showMessageDialog(frame.getComponent(0), "Hello World");
+        //SwingUtilities.invokeLater(() -> {
+            //new ActionEventPanel().buildGUI();
+        //});
     }
 }

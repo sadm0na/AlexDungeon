@@ -1,18 +1,18 @@
-import java.util.*;
 import java.awt.*;
-
-import javax.imageio.ImageIO;
-import javax.smartcardio.Card;
-import javax.swing.*;
 import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
 
-class cards {
-    int hp;
-    int money;
+class Cards {
+    int hp; // health
+    int money; 
     int sword;
     ImageIcon img;
     String string;
 
+    /**
+     * For overloading later.
+     **/
     void actionCard() {
 
     }
@@ -25,20 +25,23 @@ class cards {
         return string;
     }
 
-    cards randomCards() {
+    /**
+     * Returns a random card.
+     **/
+    Cards randomCards(int level) {
         Random random = new Random();
         int r = random.nextInt(1, 4);
         if (r == 1) {
-           return new monster();
+            return new monster(level);
         } else { 
             if (r == 2) {
                 return (new sword());
             } 
         }
-        return(new poison());
+        return new poison();
     }
 
-    boolean changeAlex(cards alex) {
+    boolean changeAlex(Cards alex) {
         return false; // its ok. if true - game stop
     }
 
@@ -47,37 +50,45 @@ class cards {
     }
 }
 
-class Alex extends cards {
+class Alex extends Cards {
     
     public Alex(int hp) {
         img  = new ImageIcon("alex.jpeg");
         money = 0;
         this.hp = hp;
         sword = 0;
-        string = "hp: " + hp + "        $: " + money + "        sw " + sword;
+        string = "hp: " + hp + "        $: " + money + "          sword strength: " + sword;
         
     }
 
     @Override
     void renewString() {
-        string = "hp: " + hp + "        $: " + money + "        sw " + sword;
+        string = "hp: " + hp + "        $: " + money + "          sword strength: " + sword;
     }
 
     
 }
 
-class monster extends cards {
+class monster extends Cards {
 
     public monster() {
         img  = new ImageIcon("monster.jpg");
         Random random = new Random();
         hp = random.nextInt(5) + 2;
         money = random.nextInt(5) + 2;
-        string = "hp: " + hp + " $: " + money;
+        string = "hp: " + hp + "             raward for killing: " + money + "$";
+    }
+
+    public monster(int level) {
+        img  = new ImageIcon("monster.jpg");
+        Random random = new Random();
+        hp = random.nextInt(5) + level * 2;
+        money = random.nextInt(5) + level * 2;
+        string = "hp: " + hp + "             raward for killing: " + money + "$";
     }
     
     @Override
-    boolean changeAlex(cards alex) {
+    boolean changeAlex(Cards alex) {
         if (alex.sword > 0) {
             int s = 0 + alex.sword;
             alex.sword = Math.max(0, s - hp);
@@ -100,39 +111,39 @@ class monster extends cards {
 
     @Override
     void renewString() {
-        string = "hp: " + hp + " $: " + money;
+        string = "hp: " + hp + "             raward for killing: " + money + "$";
     }
 }
 
-class poison extends cards {
+class poison extends Cards {
 
     public poison() {
         img  = new ImageIcon("poison.png");
         Random random = new Random();
         hp = random.nextInt(5) + 2;
-        string = "+" + hp;
+        string = "+" + hp + " to hp";
     }
 
     @Override
-    boolean changeAlex(cards alex) {
+    boolean changeAlex(Cards alex) {
         alex.hp += hp;
         alex.renewString();
         return false;
     }
 }
 
-class sword extends cards {
+class sword extends Cards {
 
     public sword() {
         img  = new ImageIcon("sword.png");
         Random random = new Random();
         sword = random.nextInt(5) + 2;
-        string = "" + sword;
+        string = "Sword strength: " + sword;
         
     }
 
     @Override
-    boolean changeAlex(cards alex) {
+    boolean changeAlex(Cards alex) {
         alex.sword = Math.max(alex.sword, sword);
         alex.renewString();
         return false;
@@ -162,14 +173,19 @@ class coordinants {
 
 class Game implements ActionListener {
     coordinants alexCoor;
-    ArrayList<cards> arrayListCards = new ArrayList<cards>();
+    ArrayList<Cards> arrayListCards = new ArrayList<Cards>();
     ArrayList<JButton> arrayList = new ArrayList<JButton>();
     //public int x = 0;
     JFrame frame = new JFrame("minigame");
     JButton button;
+    int level;
+    int levelMoney;
+    int maxHp;
+    int strengthPlus;
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        
         int h = Integer.parseInt(e.getActionCommand());
         int x = h / 3;
         int y = h - x * 3;
@@ -179,7 +195,8 @@ class Game implements ActionListener {
             
             boolean ind = arrayListCards.get(x * 3 + y).changeAlex(
                 arrayListCards.get(alexCoor.x * 3 + alexCoor.y));
-
+            arrayListCards.get(alexCoor.x * 3 + alexCoor.y).hp = Math.min( arrayListCards.get(alexCoor.x * 3 + alexCoor.y).hp, maxHp);
+            arrayListCards.get(alexCoor.x * 3 + alexCoor.y).renewString();
             button = arrayList.get(x * 3 + y);
             button.setIcon(arrayListCards.get(x * 3 + y).img);
             button.setText(arrayListCards.get(x * 3 + y).string);
@@ -197,7 +214,7 @@ class Game implements ActionListener {
                 return;
             }
             arrayListCards.set(x * 3 + y, arrayListCards.get(alexCoor.x * 3 + alexCoor.y));
-            arrayListCards.set(alexCoor.x * 3 + alexCoor.y, new cards().randomCards());
+            arrayListCards.set(alexCoor.x * 3 + alexCoor.y, new Cards().randomCards(level));
             button = arrayList.get(x * 3 + y);
             button.setIcon(arrayListCards.get(x * 3 + y).img);
             button.setText(arrayListCards.get(x * 3 + y).string);
@@ -209,86 +226,102 @@ class Game implements ActionListener {
             alexCoor.x = x;
             alexCoor.y = y;
 
+             // END MINI-GAME
+            if (arrayListCards.get(alexCoor.x * 3 + alexCoor.y).money >= levelMoney) {
+                JOptionPane.showMessageDialog(frame.getComponent(0), "You win");
+            }
+
+
             //button.setBounds(40 + x, 100, 260, 260); 
         }
 
     }
 
-    public Game() {
+    public Game(int level, int maxHp, int strengthPlus) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.level = level;
+        this.maxHp = maxHp;
+        this.strengthPlus = strengthPlus;
+        levelMoney = 0;
+        if (level == 1) {
+            levelMoney = 10;
+        } else {
+            if (level == 2) {
+                levelMoney = 15;
+            } else {
+                levelMoney = 20;
+            }
+        }
         alexCoor = new coordinants(1, 1);
-        Random random = new Random();
-        int r = random.nextInt(1, 4);
         for (int i = 0; i < 9; i++) {
             if (i == 4) {
                 arrayListCards.add(new Alex(3));
-            }
-            else {
-                if (r == 1) {
-                    arrayListCards.add(new monster());
-                } else {
-                    if (r == 2) {
-                        arrayListCards.add(new sword());
-                    } else {
-                        arrayListCards.add(new poison());
-                    }
-                }
-                r = random.nextInt(1, 4);
+            } else {
+                arrayListCards.add(new Cards().randomCards(level));
             }
         }
-
-         // creates window not visible yet
+        // creates window not visible yet
         ImageIcon img = new ImageIcon("alex.jpeg");
         button = new JButton("+6 hp", img); // creates button
         button.setActionCommand("1");
-
-        //button.setIcon(img);
-
-        //ClickReporter clickReporter;
 
         button.setBounds(40, 100, 260, 260);
         button.setVerticalTextPosition(SwingConstants.TOP);
         button.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        //frame.add(button, BorderLayout.SOUTH);
-
-        //frame.add(button);
-        //clickReporter = new ClickReporter(); //3 creates listener
         button.addActionListener(this);
-        
+        Color backgroundButton = new Color(137, 158, 140); // creates helper object:
+        int sizeButton = (int)screenSize.getWidth()/6+15;
+        int otsp = (int)screenSize.getWidth() / 2 - sizeButton - (sizeButton) / 2 ;
+        frame.setContentPane(new JLabel(new ImageIcon("backgrond.jpg")));
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 arrayList.add(new JButton(arrayListCards.get(i * 3 + j).getString(),
                      arrayListCards.get(i * 3 + j).getImageIcon()));
                 JButton button2 = arrayList.get(i * 3 + j);; // creates button
 
-                //button.setIcon(img);
-                button2.setBounds(10 + j * 260, 10 + i * 260, 260, 260);
+                button2.setBounds(otsp + j * sizeButton, 40 + i * sizeButton, sizeButton , sizeButton);
                 button2.setVerticalTextPosition(SwingConstants.TOP);
                 button2.setHorizontalTextPosition(SwingConstants.CENTER);
                 button2.addActionListener(this);
+                button2.setBackground(backgroundButton);
                 button2.setActionCommand("" + (int)(i * 3 + j));
                 //frame.add(button, BorderLayout.SOUTH);
                 frame.add(button2);
             }
         }
 
+        Color backgrounfColor = new Color(214, 138, 242); // creates helper object:
+        JLabel textArea = new JLabel("You need " + levelMoney + " coins to win.");
+         //JTextArea textArea = new JTextArea("You need " + levelMoney + " coins to win.");
+        textArea.setFont(new Font("Serif", Font.BOLD, 22));
+        textArea.setForeground(backgrounfColor);
+        //textArea.setBackground(backgrounfColor);
+        //textArea.setLineWrap(true);
+        //textArea.setWrapStyleWord(true);
+        textArea.setBounds(otsp,5,700,40);
+        frame.add(textArea);
         //.setPreferredSize(new Dimension(60,60));
         //button.setPreferredSize(60,60);
         // put component in frame: button in frame
 
         JPanel panel = new JPanel(); // creates another component
         frame.add(panel); // put panel in frame
-        Color mauve = new Color(128, 100, 100); // creates helper object:
+        //Color backgrounfColor = new Color(128, 100, 100); // creates helper object:
+        
         // Color
-        panel.setBackground( mauve ); // colors background panel
+        panel.setBackground( backgrounfColor ); // colors background panel
+
+        //frame.add(imgLabel);
         // standard code for frames
-        frame.setSize(800, 800); // size of window in pixels
+        screenSize.getWidth();
+        frame.setSize((int)screenSize.getWidth(), (int)screenSize.getHeight()); // size of window in pixels
         frame.setVisible(true); // make frame visible
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // make close button (X) behave as expected
     }
 
-    public ArrayList<cards> getArrayList() {
+    public ArrayList<Cards> getArrayList() {
         return arrayListCards;
     }
 
@@ -297,7 +330,7 @@ class Game implements ActionListener {
 }
 
 
-class ClickReporter extends cardsMAin implements ActionListener {
+class ClickReporter extends CardsMAin implements ActionListener {
     // this method will be called when a button is clicked
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -307,10 +340,10 @@ class ClickReporter extends cardsMAin implements ActionListener {
     }
 }
 
-class cardsMAin {
+class CardsMAin {
     public static void main(String[] args) {
-        Game game = new Game();
+        Game game = new Game(1, 10, 2);
     }
-}
+} 
 
 
