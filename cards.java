@@ -28,14 +28,14 @@ class Cards {
     /**
      * Returns a random card.
      **/
-    Cards randomCards(int level) {
+    Cards randomCards(int level, int strengthPlus) {
         Random random = new Random();
         int r = random.nextInt(1, 4);
         if (r == 1) {
             return new monster(level);
         } else { 
             if (r == 2) {
-                return (new sword());
+                return (new sword(strengthPlus));
             } 
         }
         return new poison();
@@ -142,6 +142,14 @@ class sword extends Cards {
         
     }
 
+    public sword(int strengthPlus) {
+        img  = new ImageIcon("sword.png");
+        Random random = new Random();
+        sword = random.nextInt(5) + 2 + strengthPlus;
+        string = "Sword strength: " + sword;
+        
+    }
+
     @Override
     boolean changeAlex(Cards alex) {
         alex.sword = Math.max(alex.sword, sword);
@@ -214,7 +222,7 @@ class Game implements ActionListener {
                 return;
             }
             arrayListCards.set(x * 3 + y, arrayListCards.get(alexCoor.x * 3 + alexCoor.y));
-            arrayListCards.set(alexCoor.x * 3 + alexCoor.y, new Cards().randomCards(level));
+            arrayListCards.set(alexCoor.x * 3 + alexCoor.y, new Cards().randomCards(level, strengthPlus));
             button = arrayList.get(x * 3 + y);
             button.setIcon(arrayListCards.get(x * 3 + y).img);
             button.setText(arrayListCards.get(x * 3 + y).string);
@@ -255,9 +263,9 @@ class Game implements ActionListener {
         alexCoor = new coordinants(1, 1);
         for (int i = 0; i < 9; i++) {
             if (i == 4) {
-                arrayListCards.add(new Alex(3));
+                arrayListCards.add(new Alex(maxHp));
             } else {
-                arrayListCards.add(new Cards().randomCards(level));
+                arrayListCards.add(new Cards().randomCards(level, strengthPlus));
             }
         }
         // creates window not visible yet
