@@ -1,5 +1,6 @@
 import javax.swing.*;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -11,6 +12,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private long lastFrameTime; // когда последний раз обновлялось
 
     public MyPanel() throws IOException {
+        this.setPreferredSize(new Dimension(400, 400));
         this.alex = new Alex(200, 200); // в зависимости от комнаты (двери в комнате) мб будет появляться в разных местах, а не центре
         this.lastFrameTime = System.currentTimeMillis();
 

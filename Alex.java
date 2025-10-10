@@ -58,7 +58,22 @@ public class Alex {
     }
 
     public void update(long timeDifference) { // сюда тоже добавятся строки для анимации
-        x += timeDifference * RunningSpeed * xRunningDirection;
-        y += timeDifference * RunningSpeed * yRunningDirection;
+        double newX = x;
+        double newY = y;
+
+        newX += timeDifference * RunningSpeed * xRunningDirection;
+        newY += timeDifference * RunningSpeed * yRunningDirection;
+
+        if (newX >= 50 && newX <= 350) {
+            x = newX;
+        } else {
+            stopRunningX(); 
+        }
+        
+        if (newY >= 50 && newY <= 350) {
+            y = newY;
+        } else {
+            stopRunningY();
+        }
     }
 }
