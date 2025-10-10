@@ -1,4 +1,8 @@
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -14,8 +18,10 @@ public class Alex {
     public Alex(double x, double y) throws IOException { // тоже анимация добавится
         this.x = x;
         this.y = y;
-        this.xRunningSpeed = 0.3;
+        this.xRunningSpeed = 0.15;
         this.xRunningDirection = 0;
+
+        alexImage = ImageIO.read(new File("AlexPic.png"));
     }
 
     public void draw(Graphics g) { // сюда добавятся строки для анимации

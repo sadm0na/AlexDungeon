@@ -32,8 +32,10 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
             switch (keyCode) {
                 case KeyEvent.VK_A:
                     alex.runLeft();
+                    break;
                 case KeyEvent.VK_D:
                     alex.runRight();
+                    break;
             }
         }
 
@@ -42,6 +44,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_D:
                     alex.stopRunning();
+                    break;
             }
         }
 

@@ -1,6 +1,12 @@
 import javax.swing.*;
-import java.awt.BorderLayout;
 import java.io.IOException;
+
+/*
+ * 
+ * надо подумать как должна работать смена локаций и запуск мини-игры
+ * это же все в одном окне должно происходить
+ * 
+ */
 
 public class Room {
     
@@ -20,11 +26,5 @@ public class Room {
             panel.updateWorldPhysics();
             Thread.sleep(20);
         }
-
-        // buttonsPanel.add(start);
-        // buttonsPanel.add(stop);
-
-        // frame.getContentPane().add(BorderLayout.NORTH, buttonsPanel);
-        
     }
 }
