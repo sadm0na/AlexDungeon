@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.Dimension;
@@ -5,14 +6,18 @@ import java.awt.Graphics;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public class MyPanel extends JPanel implements KeyEventDispatcher {
     private Alex alex;
     private long lastFrameTime; // когда последний раз обновлялось
+    private BufferedImage backgroundImage;
 
     public MyPanel() throws IOException {
         this.setPreferredSize(new Dimension(400, 400));
+        this.backgroundImage = ImageIO.read(new File("Room.png"));
         this.alex = new Alex(200, 200); // в зависимости от комнаты (двери в комнате) мб будет появляться в разных местах, а не центре
         this.lastFrameTime = System.currentTimeMillis();
 
@@ -23,6 +28,11 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null); 
+        }
+
         alex.draw(g);
     }
 

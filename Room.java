@@ -15,11 +15,11 @@ public class Room {
         JFrame frame = new JFrame("Alex Dungeon");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setSize(500, 500);
         frame.setLocationRelativeTo(null); // в центре
 
         frame.add(panel);
         frame.pack();
+        frame.setResizable(false);
         frame.setVisible(true);
 
         while (true) {

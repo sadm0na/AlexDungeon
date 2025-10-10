@@ -64,13 +64,13 @@ public class Alex {
         newX += timeDifference * RunningSpeed * xRunningDirection;
         newY += timeDifference * RunningSpeed * yRunningDirection;
 
-        if (newX >= 50 && newX <= 350) {
+        if (newX >= 50 && newX <= 335) {
             x = newX;
         } else {
             stopRunningX(); 
         }
         
-        if (newY >= 50 && newY <= 350) {
+        if (newY >= 50 && newY <= 325) {
             y = newY;
         } else {
             stopRunningY();
