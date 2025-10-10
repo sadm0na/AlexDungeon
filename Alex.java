@@ -12,14 +12,16 @@ public class Alex {
 
     private double x;
     private double y;
-    private double xRunningSpeed;
+    private double RunningSpeed;
     private int xRunningDirection; // 0 - not running, 1 - right, -1 - left
+    private int yRunningDirection;
 
     public Alex(double x, double y) throws IOException { // тоже анимация добавится
         this.x = x;
         this.y = y;
-        this.xRunningSpeed = 0.15;
+        this.RunningSpeed = 0.15;
         this.xRunningDirection = 0;
+        this.yRunningDirection = 0;
 
         alexImage = ImageIO.read(new File("AlexPic.png"));
     }
@@ -31,6 +33,14 @@ public class Alex {
         g.drawImage(alexImage, imageX, imageY, null);
     }
 
+    public void runUp() {
+        yRunningDirection = -1;
+    }
+
+    public void runDown() {
+        yRunningDirection = 1;
+    }
+
     public void runLeft() {
         xRunningDirection = -1;
     }
@@ -39,11 +49,16 @@ public class Alex {
         xRunningDirection = 1;
     }
 
-    public void stopRunning() {
+    public void stopRunningX() {
         xRunningDirection = 0;
     }
 
+    public void stopRunningY() {
+        yRunningDirection = 0;
+    }
+
     public void update(long timeDifference) { // сюда тоже добавятся строки для анимации
-        x += timeDifference * xRunningSpeed * xRunningDirection;
+        x += timeDifference * RunningSpeed * xRunningDirection;
+        y += timeDifference * RunningSpeed * yRunningDirection;
     }
 }
