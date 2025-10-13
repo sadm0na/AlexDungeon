@@ -27,18 +27,18 @@ public class Dungeon {
     private void initializeRooms() {
         rooms = new RoomData[3];
         
-        // первая комната
+        // первая комната, дверь справа только
         rooms[0] = new RoomData("Room1.png", 200, 200);
-        rooms[0].addDoor(new Door(350, 180, 40, 40, 1));
+        rooms[0].addDoor(new Door(300, 180, 35, 40, 1)); // дверь справа
         
-        // вторая
-        rooms[1] = new RoomData("Room2.png", 50, 200);
-        rooms[1].addDoor(new Door(10, 180, 40, 40, 0));
-        rooms[1].addDoor(new Door(350, 180, 40, 40, 2));
+        // вторая. дверь справа и слева.
+        rooms[1] = new RoomData("Room2.png", 200, 200);
+        rooms[1].addDoor(new Door(50, 180, 40, 40, 0)); // дверь слева
+        rooms[1].addDoor(new Door(300, 180, 35, 40, 2)); // дверь справа
         
-        // третья
-        rooms[2] = new RoomData("Room3.png", 50, 200);
-        rooms[2].addDoor(new Door(10, 180, 40, 40, 1)); // двери координаты задаем вручную.. 
+        // третьякомната - дверь только слева
+        rooms[2] = new RoomData("Room3.png", 200, 200);
+        rooms[2].addDoor(new Door(50, 180, 40, 40, 1)); // дверь слева обратно
     }
     
     public RoomData getCurrentRoom() {

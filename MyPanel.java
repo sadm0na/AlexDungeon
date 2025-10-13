@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 public class MyPanel extends JPanel implements KeyEventDispatcher {
     private Alex alex;
     private long lastFrameTime;
-    private BufferedImage backgroundImage; // в румдате путь будет храниться
+    private BufferedImage backgroundImage; // в RoomData путь будет храниться
     private Dungeon dungeon;
     private boolean eKeyPressed = false; // переход в дверь через нажатие e
     
@@ -51,7 +51,18 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         }
         
         alex.draw(g);
+
+        // отладка - координаты алекса
+        g.drawString("X: " + (int)alex.getX() + " Y: " + (int)alex.getY(), 10, 20);
         
+        
+        // Отладка - дверь красной рисуем
+        RoomData room = dungeon.getCurrentRoom();
+        g.setColor(java.awt.Color.RED);
+        for (Door door : room.getDoors()) {
+            g.drawRect((int)door.getX(), (int)door.getY(), 40, 40);
+        }
+
         // если дверь рядом, текстик появится
         checkDoorProximity(g);
     }
