@@ -1,7 +1,7 @@
 public class Door { // позиция, размеры двери, и то куда она ведет персонажа
     private double x, y;
     private double width, height;
-    private int targetRoomId;
+    private int targetRoomId; // индекс комнаты в которую попадем
     
     public Door(double x, double y, double width, double height, int targetRoomId) {
         this.x = x;

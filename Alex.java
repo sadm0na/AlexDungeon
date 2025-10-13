@@ -72,8 +72,6 @@ public class Alex {
             stopRunningY();
         }
     }
-    
-    // добавилось это для дверей (а потом и не только для них)
 
     public double getX() {
         return x;

@@ -32,7 +32,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     }
     
     public void loadCurrentRoom() throws IOException {
-        RoomData room = dungeon.getCurrentRoom(); // данная великая комната
+        RoomData room = dungeon.getCurrentRoom(); // прогрузка комнаты
         this.backgroundImage = ImageIO.read(new File(room.getBackgroundPath()));
         
         if (alex == null) {
