@@ -190,6 +190,7 @@ class Game implements ActionListener {
     int levelMoney;
     int maxHp;
     int strengthPlus;
+    int status = 0;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -216,6 +217,7 @@ class Game implements ActionListener {
             // END MINI-GAME
             if (ind) {
                 JOptionPane.showMessageDialog(frame.getComponent(0), "You lose");
+                status = -1;
             }
 
             if (arrayListCards.get(x * 3 + y).hp > 0 && alex_sword > arrayListCards.get(alexCoor.x * 3 + alexCoor.y).sword) {
@@ -237,6 +239,7 @@ class Game implements ActionListener {
              // END MINI-GAME
             if (arrayListCards.get(alexCoor.x * 3 + alexCoor.y).money >= levelMoney) {
                 JOptionPane.showMessageDialog(frame.getComponent(0), "You win");
+                status = 1;
             }
 
 
@@ -329,6 +332,15 @@ class Game implements ActionListener {
         // make close button (X) behave as expected
     }
 
+    public boolean GameControl(){
+        while (status == 0) {
+
+        }
+        if (status == -1)
+            return false;
+        return true;
+    }
+
     public ArrayList<Cards> getArrayList() {
         return arrayListCards;
     }
@@ -351,6 +363,8 @@ class ClickReporter extends CardsMAin implements ActionListener {
 class CardsMAin {
     public static void main(String[] args) {
         Game game = new Game(1, 10, 2);
+        boolean b = game.GameControl();
+        System.out.println(b);
     }
 } 
 
