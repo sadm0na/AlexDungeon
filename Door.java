@@ -11,9 +11,9 @@ public class Door { // позиция, размеры двери, и то куд
         this.targetRoomId = targetRoomId;
     }
     
-    public boolean isPlayerNear(double playerX, double playerY) {
-        return playerX >= x && playerX <= x + width &&
-               playerY >= y && playerY <= y + height;
+    public boolean isObjectNear(double objectX, double objectY) { // дубликаты часто используются. надо наверное в отдельный класс items вынести эти функции
+        return objectX >= x && objectX <= x + width &&
+               objectY >= y && objectY <= y + height;
     }
     
     public int getTargetRoomId() {

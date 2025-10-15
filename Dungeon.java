@@ -30,15 +30,18 @@ public class Dungeon {
         // первая комната, дверь справа только
         rooms[0] = new RoomData("Room1.png", 200, 200);
         rooms[0].addDoor(new Door(300, 180, 35, 40, 1)); // дверь справа
+        rooms[0].addKey();
         
         // вторая. дверь справа и слева.
         rooms[1] = new RoomData("Room2.png", 200, 200);
         rooms[1].addDoor(new Door(50, 180, 40, 40, 0)); // дверь слева
         rooms[1].addDoor(new Door(300, 180, 35, 40, 2)); // дверь справа
+        rooms[1].addKey();
         
-        // третьякомната - дверь только слева
+        // третья комната - дверь только слева
         rooms[2] = new RoomData("Room3.png", 200, 200);
         rooms[2].addDoor(new Door(50, 180, 40, 40, 1)); // дверь слева обратно
+        rooms[2].addKey();
     }
     
     public RoomData getCurrentRoom() {
