@@ -49,15 +49,19 @@ public class Dungeon {
     }
     
     public void changeRoom(int newRoomId) throws IOException {
-        rooms[currentRoomId].setVisited(true); // у каждой комнаты будет отдельное поле, посетили ее еще или нет (надо будет сделать так чтобы статус менялся после прохождения карточной игры)
-        Game game = new Game(1,10,0);
-        boolean b = game.GameControl();
-        System.out.println(b);
-        if (b) {
+        rooms[currentRoomId].setVisited(true);
+        
+        if (rooms[newRoomId].isVisited()) {
             currentRoomId = newRoomId;
             panel.loadCurrentRoom();
-        }
-        
+        } else {
+            Game game = new Game(1,10,0);
+            boolean b = game.GameControl();
+            if (b) {
+                currentRoomId = newRoomId;
+                panel.loadCurrentRoom();
+            }
+        }        
     }
     
     public int getCurrentRoomId() {
