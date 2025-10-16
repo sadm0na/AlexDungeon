@@ -18,6 +18,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private BufferedImage backgroundImage; // в RoomData путь будет храниться
     private Dungeon dungeon;
     private boolean eKeyPressed = false; // переход в дверь через нажатие e
+    String errorMessage;
     
     public MyPanel(Dungeon dungeon) throws IOException {
         this.dungeon = dungeon;
@@ -47,10 +48,10 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         super.paintComponent(g);
         
         if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null); // фон
         }
         
-        alex.draw(g);
+        alex.draw(g); // алекс
 
         // отладка - координаты алекса
         g.drawString("X: " + (int)alex.getX() + " Y: " + (int)alex.getY(), 10, 20);
@@ -63,23 +64,50 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
             g.drawRect((int)door.getX(), (int)door.getY(), 40, 40);
         }
 
-        // если дверь рядом, текстик появится
+        // отладка ключа (желтый) (вместо этого надо будет картинку вывести)
+        Key key = room.getKey();
+        if (!key.isKeyCollected()) {
+            g.setColor(java.awt.Color.YELLOW);
+            g.drawRect((int)key.getX(), (int)key.getY(), 15, 15);
+        }
+
+        // если дверь/ключ рядом, появится надпись (добавить сундук. и вообще надо полиморфизм тут или хз)
         checkDoorProximity(g);
+        checkKeyProximity(g);
+
+        // вывод предупреждения при каком либо действии..
+        //showCaptions(g);
     }
     
-    private void checkDoorProximity(Graphics g) { // рядом ли дверь? 
+    private void checkDoorProximity(Graphics g) { // надо понять как очищать drawString (может какой то метод из Swing'a альтернативный. либо найти как с awt это сделать)
         RoomData room = dungeon.getCurrentRoom();
         for (Door door : room.getDoors()) {
-            if (door.isPlayerNear(alex.getX(), alex.getY())) {
+            if (door.isObjectNear(alex.getX(), alex.getY())) {
                 g.drawString("Нажми E", (int)door.getX(), (int)door.getY() - 10);
                 break;
             }
         }
     }
+
+    private void checkKeyProximity(Graphics g) {
+        RoomData room = dungeon.getCurrentRoom();
+        Key key = room.getKey();
+        if (key.isPlayerNear(alex.getX(), alex.getY())) {
+            g.drawString("Нажми F", (int)key.getX(), (int)key.getY() - 10);
+        }
+    }
+
+    /* 
+    public void showCaptions(Graphics g) { // надо понять как на время вывести это. по истечении времени сообщения опять null должно стать
+        
+    }
+    */
     
     @Override
     public boolean dispatchKeyEvent(KeyEvent key) {
         int keyCode = key.getKeyCode();
+        RoomData room = dungeon.getCurrentRoom();
+        Key roomKey = room.getKey();
         
         if (key.getID() == KeyEvent.KEY_PRESSED) {
             switch (keyCode) {
@@ -98,6 +126,10 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                 case KeyEvent.VK_E:
                     eKeyPressed = true;
                     break;
+                case KeyEvent.VK_F:
+                    roomKey.collectKey();
+                    break;
+
             }
         }
         
@@ -136,11 +168,21 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     
     private void checkRoomTransition() { // меняем комнату
         RoomData room = dungeon.getCurrentRoom();
+        int roomId = dungeon.getCurrentRoomId();
+
         for (Door door : room.getDoors()) {
-            if (door.isPlayerNear(alex.getX(), alex.getY())) {
+            if (door.isObjectNear(alex.getX(), alex.getY())) {
+                int nextRoomId = door.getTargetRoomId();
+
+                if (nextRoomId > roomId && !room.getKey().isKeyCollected()) {
+                    // errorMessage = "Pick up the key!";        чуть позже. надо сделать так чтобы выскакивало предупреждение на условные 10 секунд хз. короче функцию написать для всяких выводов.
+                    return;
+                }
+
                 try {
                     dungeon.changeRoom(door.getTargetRoomId());
                     eKeyPressed = false;
+                    // errorMessage = null; // ??
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
