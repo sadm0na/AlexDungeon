@@ -7,10 +7,14 @@ public class Dungeon {
     private int currentRoomId;
     private JFrame frame;
     private MyPanel panel;
+    private int health;
+    private int strength;
     
     public Dungeon() throws IOException {
         initializeRooms();
         currentRoomId = 0;
+        health = 10;
+        strength = 0;
         
         // Создаем окно и панель
         panel = new MyPanel(this); // все картинки/функции для обновления главные вызываются отсюда
@@ -31,14 +35,14 @@ public class Dungeon {
         rooms[0] = new RoomData("Room1.png", 200, 200);
         rooms[0].addDoor(new Door(300, 180, 35, 40, 1)); // дверь справа
         rooms[0].addKey();
-        
+
         // вторая. дверь справа и слева.
         rooms[1] = new RoomData("Room2.png", 200, 200);
         rooms[1].addDoor(new Door(50, 180, 40, 40, 0)); // дверь слева
         rooms[1].addDoor(new Door(300, 180, 35, 40, 2)); // дверь справа
         rooms[1].addKey();
         
-        // третья комната - дверь только слева
+
         rooms[2] = new RoomData("Room3.png", 200, 200);
         rooms[2].addDoor(new Door(50, 180, 40, 40, 1)); // дверь слева обратно
         rooms[2].addKey();
@@ -49,9 +53,20 @@ public class Dungeon {
     }
     
     public void changeRoom(int newRoomId) throws IOException {
-        rooms[currentRoomId].setVisited(true); // у каждой комнаты будет отдельное поле, посетили ее еще или нет (надо будет сделать так чтобы статус менялся после прохождения карточной игры)
-        currentRoomId = newRoomId;
-        panel.loadCurrentRoom();
+        rooms[currentRoomId].setVisited(true);
+        
+        if (rooms[newRoomId].isVisited()) {
+            currentRoomId = newRoomId;
+            panel.loadCurrentRoom();
+        } else {
+            int lvl = currentRoomId + 1;
+            Game game = new Game(1, 10,0);
+            boolean b = game.GameControl();
+            if (b) {
+                currentRoomId = newRoomId;
+                panel.loadCurrentRoom();
+            }
+        }        
     }
     
     public int getCurrentRoomId() {
