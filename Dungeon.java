@@ -7,10 +7,16 @@ public class Dungeon {
     private int currentRoomId;
     private JFrame frame;
     private MyPanel panel;
+    private int health;
+    private int strength;
+
     
     public Dungeon() throws IOException {
         initializeRooms();
         currentRoomId = 0;
+
+        health = 10;
+        strength = 0;
         
         // Создаем окно и панель
         panel = new MyPanel(this); // все картинки/функции для обновления главные вызываются отсюда
@@ -55,7 +61,8 @@ public class Dungeon {
             currentRoomId = newRoomId;
             panel.loadCurrentRoom();
         } else {
-            Game game = new Game(1,10,0);
+            int lvl = currentRoomId + 1;
+            Game game = new Game(1, 10,0);
             boolean b = game.GameControl();
             if (b) {
                 currentRoomId = newRoomId;
