@@ -1,3 +1,4 @@
+package src;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -19,7 +20,7 @@ public class Alex {
         this.xRunningDirection = 0;
         this.yRunningDirection = 0;
         
-        alexImage = ImageIO.read(new File("AlexPic.png")); // это немного поменяется когда анимацию сделаю. хотя вроде бы можно в джаве прям написать так чтобы фотка зеркалилась
+        alexImage = ImageIO.read(new File(PathFinder.findFile("misc/Alex/AlexPic.png"))); // это немного поменяется когда анимацию сделаю. хотя вроде бы можно в джаве прям написать так чтобы фотка зеркалилась
     }
     
     public void draw(Graphics g) {

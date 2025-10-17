@@ -1,3 +1,4 @@
+package src;
 import java.util.*;
 import java.awt.*;
 
@@ -45,7 +46,7 @@ class ActionEventPanel extends JPanel implements ActionListener {
         JFrame frame = new JFrame("ActionEventPanel");
         JPanel panel = new JPanel(); // creates another component
         frame.add(panel); // put panel in frame
-        ImageIcon img = new ImageIcon("backgrond.jpg");
+        ImageIcon img = new ImageIcon(PathFinder.findFile("misc/CardsGame/backgrond.jpg"));
              
         frame.setContentPane(new JLabel(img));
         

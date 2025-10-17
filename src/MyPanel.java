@@ -1,3 +1,4 @@
+package src;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.KeyEventDispatcher;
@@ -9,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.*;
-
 import javax.imageio.ImageIO;
 
 public class MyPanel extends JPanel implements KeyEventDispatcher {

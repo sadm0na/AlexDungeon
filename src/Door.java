@@ -1,3 +1,4 @@
+package src;
 public class Door { // позиция, размеры двери, и то куда она ведет персонажа
     private double x, y;
     private double width, height;
