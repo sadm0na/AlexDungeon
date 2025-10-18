@@ -50,9 +50,9 @@ class Cards {
     }
 }
 
-class Alex extends Cards {
+class AlexCards extends Cards {
     
-    public Alex(int hp) {
+    public AlexCards(int hp) {
         img  = new ImageIcon("alex.jpeg");
         money = 0;
         this.hp = hp;
@@ -88,24 +88,25 @@ class monster extends Cards {
     }
     
     @Override
-    boolean changeAlex(Cards alex) {
-        if (alex.sword > 0) {
-            int s = 0 + alex.sword;
-            alex.sword = Math.max(0, s - hp);
-            alex.renewString();
+    boolean changeAlex(Cards AlexCards) {
+        if (AlexCards.sword > 0) {
+            int s = 0 + AlexCards.sword;
+            AlexCards.sword = Math.max(0, s - hp);
+            AlexCards.renewString();
             hp = Math.max(0, hp - s);
             this.renewString();
             if (hp > 0) {
                 return false;
             }
         }
-        alex.hp -= hp;
-        if (alex.hp <= 0) {
-            alex.renewString();
+
+        AlexCards.hp -= hp;
+        if (AlexCards.hp <= 0) {
+            AlexCards.renewString();
             return true;
         }
-        alex.money += money;
-        alex.renewString();
+        AlexCards.money += money;
+        AlexCards.renewString();
         return false;
     }
 
@@ -125,9 +126,9 @@ class poison extends Cards {
     }
 
     @Override
-    boolean changeAlex(Cards alex) {
-        alex.hp += hp;
-        alex.renewString();
+    boolean changeAlex(Cards AlexCards) {
+        AlexCards.hp += hp;
+        AlexCards.renewString();
         return false;
     }
 }
@@ -151,9 +152,9 @@ class sword extends Cards {
     }
 
     @Override
-    boolean changeAlex(Cards alex) {
-        alex.sword = Math.max(alex.sword, sword);
-        alex.renewString();
+    boolean changeAlex(Cards AlexCards) {
+        AlexCards.sword = Math.max(AlexCards.sword, sword);
+        AlexCards.renewString();
         return false;
     }
 }
@@ -190,7 +191,7 @@ class Game implements ActionListener {
     int levelMoney;
     int maxHp;
     int strengthPlus;
-    int status = 0;
+    volatile int status = 0;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -217,7 +218,9 @@ class Game implements ActionListener {
             // END MINI-GAME
             if (ind) {
                 JOptionPane.showMessageDialog(frame.getComponent(0), "You lose");
+                
                 status = -1;
+                //this.GameControl();
             }
 
             if (arrayListCards.get(x * 3 + y).hp > 0 && alex_sword > arrayListCards.get(alexCoor.x * 3 + alexCoor.y).sword) {
@@ -240,6 +243,7 @@ class Game implements ActionListener {
             if (arrayListCards.get(alexCoor.x * 3 + alexCoor.y).money >= levelMoney) {
                 JOptionPane.showMessageDialog(frame.getComponent(0), "You win");
                 status = 1;
+                //this.GameControl();
             }
 
 
@@ -248,7 +252,7 @@ class Game implements ActionListener {
 
     }
 
-    public Game(int level, int maxHp, int strengthPlus) {
+    public Game( int level, int maxHp, int strengthPlus) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.level = level;
         this.maxHp = maxHp;
@@ -266,7 +270,8 @@ class Game implements ActionListener {
         alexCoor = new coordinants(1, 1);
         for (int i = 0; i < 9; i++) {
             if (i == 4) {
-                arrayListCards.add(new Alex(maxHp));
+
+                arrayListCards.add(new AlexCards(maxHp));
             } else {
                 arrayListCards.add(new Cards().randomCards(level, strengthPlus));
             }
@@ -333,9 +338,12 @@ class Game implements ActionListener {
     }
 
     public boolean GameControl(){
-        while (status == 0) {
-
+        while (true) {
+            if (status != 0) {
+                break;
+            }
         }
+        frame.setVisible(false);
         if (status == -1)
             return false;
         return true;
@@ -362,7 +370,8 @@ class ClickReporter extends CardsMAin implements ActionListener {
 
 class CardsMAin {
     public static void main(String[] args) {
-        Game game = new Game(1, 10, 2);
+         
+        Game game = new Game( 1, 10, 2);
         boolean b = game.GameControl();
         System.out.println(b);
     }
