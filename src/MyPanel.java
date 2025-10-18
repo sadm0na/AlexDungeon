@@ -1,3 +1,4 @@
+package src;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.KeyEventDispatcher;
@@ -9,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.*;
-
 import javax.imageio.ImageIO;
 
 public class MyPanel extends JPanel implements KeyEventDispatcher {
@@ -66,7 +66,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
         // отладка ключа (желтый) (вместо этого надо будет картинку вывести)
         Key key = room.getKey();
-        if (!key.isKeyCollected()) {
+        if (key != null && !key.isKeyCollected()) {
             g.setColor(java.awt.Color.YELLOW);
             g.drawRect((int)key.getX(), (int)key.getY(), 15, 15);
         }
@@ -92,7 +92,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private void checkKeyProximity(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
         Key key = room.getKey();
-        if (key.isPlayerNear(alex.getX(), alex.getY())) {
+        if (key != null && key.isPlayerNear(alex.getX(), alex.getY())) {
             g.drawString("Нажми F", (int)key.getX(), (int)key.getY() - 10);
         }
     }
@@ -107,6 +107,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     public boolean dispatchKeyEvent(KeyEvent key) {
         int keyCode = key.getKeyCode();
         RoomData room = dungeon.getCurrentRoom();
+        int roomID = dungeon.getCurrentRoomId();
         Key roomKey = room.getKey();
         
         if (key.getID() == KeyEvent.KEY_PRESSED) {
@@ -127,7 +128,12 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                     eKeyPressed = true;
                     break;
                 case KeyEvent.VK_F:
-                    roomKey.collectKey();
+                    if (roomKey != null) {
+                        roomKey.collectKey();
+                        if (roomID == 4) {
+                            dungeon.makeTreasuryAvalilable();
+                        }
+                    }
                     break;
 
             }
@@ -174,7 +180,12 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
             if (door.isObjectNear(alex.getX(), alex.getY())) {
                 int nextRoomId = door.getTargetRoomId();
 
-                if (nextRoomId > roomId && !room.getKey().isKeyCollected()) {
+                // говнокод. упростить. (не считая перрвый if)
+                if (nextRoomId == 5 && !dungeon.isTreasuryAvailable()) {
+                    return;
+                } else if ((nextRoomId == 4 && roomId == 0) && !dungeon.getSpecificRoom(nextRoomId).getKey().isKeyCollected()) { // переход между боссом и домом
+                    return;
+                } else if ((nextRoomId > roomId || nextRoomId == 0 && roomId == 4) && !room.getKey().isKeyCollected()) { 
                     // errorMessage = "Pick up the key!";        чуть позже. надо сделать так чтобы выскакивало предупреждение на условные 10 секунд хз. короче функцию написать для всяких выводов.
                     return;
                 }

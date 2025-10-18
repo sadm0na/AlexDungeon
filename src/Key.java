@@ -1,3 +1,4 @@
+package src;
 public class Key {
     private double x;
     private double y;

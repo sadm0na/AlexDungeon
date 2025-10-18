@@ -1,3 +1,4 @@
+package src;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -53,7 +54,7 @@ class Cards {
 class AlexCards extends Cards {
     
     public AlexCards(int hp) {
-        img  = new ImageIcon("alex.jpeg");
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/alex.jpeg"));
         money = 0;
         this.hp = hp;
         sword = 0;
@@ -72,7 +73,7 @@ class AlexCards extends Cards {
 class monster extends Cards {
 
     public monster() {
-        img  = new ImageIcon("monster.jpg");
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster.jpg"));
         Random random = new Random();
         hp = random.nextInt(5) + 2;
         money = random.nextInt(5) + 2;
@@ -80,7 +81,7 @@ class monster extends Cards {
     }
 
     public monster(int level) {
-        img  = new ImageIcon("monster.jpg");
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster.jpg"));
         Random random = new Random();
         hp = random.nextInt(5) + level * 2;
         money = random.nextInt(5) + level * 2;
@@ -119,7 +120,7 @@ class monster extends Cards {
 class poison extends Cards {
 
     public poison() {
-        img  = new ImageIcon("poison.png");
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/poison.png"));
         Random random = new Random();
         hp = random.nextInt(5) + 2;
         string = "+" + hp + " to hp";
@@ -136,7 +137,7 @@ class poison extends Cards {
 class sword extends Cards {
 
     public sword() {
-        img  = new ImageIcon("sword.png");
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/sword.png"));
         Random random = new Random();
         sword = random.nextInt(5) + 2;
         string = "Sword strength: " + sword;
@@ -144,7 +145,7 @@ class sword extends Cards {
     }
 
     public sword(int strengthPlus) {
-        img  = new ImageIcon("sword.png");
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/sword.png"));
         Random random = new Random();
         sword = random.nextInt(5) + 2 + strengthPlus;
         string = "Sword strength: " + sword;
@@ -277,7 +278,7 @@ class Game implements ActionListener {
             }
         }
         // creates window not visible yet
-        ImageIcon img = new ImageIcon("alex.jpeg");
+        ImageIcon img = new ImageIcon(PathFinder.findFile("misc/CardsGame/alex.jpeg"));
         button = new JButton("+6 hp", img); // creates button
         button.setActionCommand("1");
 
@@ -289,7 +290,7 @@ class Game implements ActionListener {
         Color backgroundButton = new Color(137, 158, 140); // creates helper object:
         int sizeButton = (int)screenSize.getWidth()/6+15;
         int otsp = (int)screenSize.getWidth() / 2 - sizeButton - (sizeButton) / 2 ;
-        frame.setContentPane(new JLabel(new ImageIcon("backgrond.jpg")));
+        frame.setContentPane(new JLabel(new ImageIcon(PathFinder.findFile("misc/CardsGame/backgrond.jpg"))));
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 arrayList.add(new JButton(arrayListCards.get(i * 3 + j).getString(),

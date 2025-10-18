@@ -1,3 +1,4 @@
+package src;
 public class Door { // позиция, размеры двери, и то куда она ведет персонажа
     private double x, y;
     private double width, height;
@@ -12,8 +13,9 @@ public class Door { // позиция, размеры двери, и то куд
     }
     
     public boolean isObjectNear(double objectX, double objectY) { // дубликаты часто используются. надо наверное в отдельный класс items вынести эти функции
-        return objectX >= x && objectX <= x + width &&
-               objectY >= y && objectY <= y + height;
+        int nearArea = 10;
+        return objectX >= x && objectX <= x + width + nearArea &&
+               objectY >= y && objectY <= y + height + nearArea;
     }
     
     public int getTargetRoomId() {

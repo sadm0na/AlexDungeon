@@ -1,3 +1,4 @@
+package src;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,6 @@ public class RoomData { // сюда надо будет засунуть и су
     }
 
     // рандомная координата вблизи стены
- //
     private int[] getRandomKeyPosition() { // {320, 325}
         int[][][] walls = {{{50, 55}, {55, 320}}, {{55, 320}, {50, 55}}, {{320, 325}, {55, 320}}, {{55, 320}, {320, 325}}}; // когда размеры фрема поменяются это надо будет изменить
         boolean isSpaceAvailable = false;
