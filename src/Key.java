@@ -12,7 +12,7 @@ public class Key {
     }
 
     public boolean isPlayerNear(double playerX, double playerY) { // проверяю попадает ли в окружность ключа..?
-        return Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2) < 35;
+        return Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2) < 65;
     }
 
     public double getX() {

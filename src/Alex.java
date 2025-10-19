@@ -2,11 +2,20 @@ package src;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.awt.Graphics;
+
 import java.awt.image.BufferedImage;
 
+
+import javax.swing.*;
+import javax.imageio.ImageIO;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
+
 public class Alex {
-    private BufferedImage alexImage;
+    private ImageIcon alexImage;
     private double x;
     private double y;
     private double RunningSpeed;
@@ -20,14 +29,17 @@ public class Alex {
         this.xRunningDirection = 0;
         this.yRunningDirection = 0;
         
-        alexImage = ImageIO.read(new File(PathFinder.findFile("misc/Alex/AlexPic.png"))); // это немного поменяется когда анимацию сделаю. хотя вроде бы можно в джаве прям написать так чтобы фотка зеркалилась
+        alexImage = new ImageIcon(ImageIO.read(new File(PathFinder.findFile("misc/Alex/Alex2.png")))); // это немного поменяется когда анимацию сделаю. хотя вроде бы можно в джаве прям написать так чтобы фотка зеркалилась
+        
     }
     
     public void draw(Graphics g) {
         int imageX = (int) x;
         int imageY = (int) y;
         
-        g.drawImage(alexImage, imageX, imageY, null);
+        Image ai = alexImage.getImage();
+        ai = ai.getScaledInstance(90,100,Image.SCALE_DEFAULT);
+        g.drawImage(ai, imageX, imageY, null);
     }
     
     public void runUp() {
@@ -60,14 +72,29 @@ public class Alex {
         
         newX += timeDifference * RunningSpeed * xRunningDirection;
         newY += timeDifference * RunningSpeed * yRunningDirection;
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
-        if (newX >= 50 && newX <= 335) {
+        int border = 100;
+        int miniMapSize = 250;
+        int minimapH = miniMapSize;
+
+        int backW = (int)screenSize.getWidth() - border * 2;
+        int backH = (int)screenSize.getHeight() - border - minimapH;
+
+        //border - 10, border - 10, backW,backH 
+        int leftBorder = border - 10;
+        int rightBorder = leftBorder + backW;
+        int upBorder = border - 10;
+        int downBorder = border + backH + 10;
+
+        if (newX >= leftBorder && newX <= rightBorder) {
             x = newX;
         } else {
             stopRunningX();
         }
         
-        if (newY >= 50 && newY <= 325) {
+        if (newY >= upBorder && newY <= downBorder) {
             y = newY;
         } else {
             stopRunningY();
