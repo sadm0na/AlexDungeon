@@ -12,9 +12,12 @@ import java.awt.*;
 import java.util.List;
 
 public class MyPanel extends JPanel implements KeyEventDispatcher {
+    // Image scaleImage;  вот эти две переменные заменяю на следующие
+    // Image scaleBack;
     // кэшируем масштабированное изображение и текстуру фона
     private Image scaledBackground; 
     private Image backgroundTexture;
+    private Image scaledMiniMap;
 
     private Dungeon dungeon;
     private Alex alex;
@@ -22,11 +25,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private boolean eKeyPressed = false; 
     private long lastFrameTime;
 
-    String errorMessage; // над этим мне надо поработать
+    private String errorMessage; // над этим мне надо поработать
 
     JLabel wIcon;
-    Image scaleImage;
-    Image scaleBack;
     Image walls;
 
     public MyPanel(Dungeon dungeon) throws IOException {
@@ -49,21 +50,28 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     
     public void loadCurrentRoom() throws IOException {
         RoomData room = dungeon.getCurrentRoom(); // прогрузка комнаты
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
-        scaleBack = ImageIO.read(new File(room.getBackgroundPath()));
+        int border = 100;
+        int backW = (int)screenSize.getWidth() - border * 2;
+        int backH = (int)screenSize.getHeight() - border - 250;
 
+        // мы не делаем drawImage прямо тут, здесь мы сохраняем фотки в буфер (переменные)
+        
+        // комната
+        BufferedImage roomBackground = ImageIO.read(new File(room.getBackgroundPath()));
+        this.scaledBackground = roomBackground.getScaledInstance(backW, backH, Image.SCALE_SMOOTH);
+        
+        // задний фон
+        this.backgroundTexture = ImageIO.read(new File(PathFinder.findFile("misc/Rooms/Back3.png")));
+        
+        // загрузка и масштабирование мини карты
         int miniMapSize = 250;
-        int minimapW = miniMapSize + (int)((double)miniMapSize * 0.4);
-        int minimapH = miniMapSize;
+        int miniMapW = miniMapSize + (int)((double)miniMapSize * 0.4); 
+        int miniMapH = miniMapSize;  
 
-        BufferedImage wPic = ImageIO.read(new File(room.getminiMapPath()));
-        
-        ImageIcon icon = new ImageIcon(wPic);
-        scaleImage = icon.getImage().getScaledInstance(minimapW, minimapH,Image.SCALE_DEFAULT);
-        wIcon = new JLabel(new ImageIcon(scaleImage));
-        wIcon.setBounds(300,300, minimapW, minimapH);
-        
-        //wIcon.setBounds(300,300, 30, 30);
+        BufferedImage miniMap = ImageIO.read(new File(room.getminiMapPath()));                   
+        this.scaledMiniMap = miniMap.getScaledInstance(miniMapW, miniMapH, Image.SCALE_SMOOTH);
         
         if (alex == null) {
             alex = new Alex(room.getPlayerStartX(), room.getPlayerStartY());
@@ -78,8 +86,6 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int border = 100;
-        int backW = (int)screenSize.getWidth() - border * 2;
-        int backH = (int)screenSize.getHeight() - border - 250;
         
         // Рисуем из КЭША 
         if (backgroundTexture != null) {
@@ -90,8 +96,15 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
             g.drawImage(scaledBackground, border - 10, border - 10, null);
         }
         
-        if (scaleImage != null) {
-            g.drawImage(scaleImage, screenSize.width - 300, screenSize.height - 260, null);
+        if (scaledMiniMap != null) {
+            int miniMapSize = 250;
+            int minimapW = miniMapSize + (int)((double)miniMapSize * 0.4);  
+            int minimapH = miniMapSize;                                     
+            
+            int miniMapX = screenSize.width - minimapW;
+            int miniMapY = screenSize.height - minimapH - 10;
+            
+            g.drawImage(scaledMiniMap, miniMapX, miniMapY, null);
         }
 
 
@@ -99,13 +112,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
         alex.draw(g); // алекс
     
-        // Отрисовка дверей
+        // Отрисовка компонентов
         drawDoors(g);
-
-        // отрисовка ключа
         drawKeys(g);
-
-        // отрисовка сундуков
         drawChests(g);
 
         // проверить близость к предметам
