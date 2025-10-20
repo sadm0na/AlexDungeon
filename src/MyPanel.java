@@ -15,9 +15,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     // Image scaleImage;  вот эти две переменные заменяю на следующие
     // Image scaleBack;
     // кэшируем масштабированное изображение и текстуру фона
-    private Image scaledBackground; 
-    private Image backgroundTexture;
-    private Image scaledMiniMap;
+    private Image scaledRoomImage; // комната
+    private Image backgroundTexture; // за комнатой
+    private Image scaledMiniMap; 
 
     private Dungeon dungeon;
     private Alex alex;
@@ -36,10 +36,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize((int)screenSize.getWidth(), (int)screenSize.getHeight());
         this.setPreferredSize(screenSize);
-
-        // двойная буферизация. вроде должно оптимизировать
-        setDoubleBuffered(true);
         
+        setDoubleBuffered(true); // в инете пишут ускоряет как то работу, хз как. наверное без разницы есть эта строка или нет
+
         loadCurrentRoom();
         
         this.lastFrameTime = System.currentTimeMillis();
@@ -49,18 +48,18 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     }
     
     public void loadCurrentRoom() throws IOException {
-        RoomData room = dungeon.getCurrentRoom(); // прогрузка комнаты
+        RoomData room = dungeon.getCurrentRoom();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
         int border = 100;
         int backW = (int)screenSize.getWidth() - border * 2;
         int backH = (int)screenSize.getHeight() - border - 250;
-
-        // мы не делаем drawImage прямо тут, здесь мы сохраняем фотки в буфер (переменные)
         
+        // все скейлы и тд и тп делаются только 1 раз когда хотим загрузить комнату
+
         // комната
         BufferedImage roomBackground = ImageIO.read(new File(room.getBackgroundPath()));
-        this.scaledBackground = roomBackground.getScaledInstance(backW, backH, Image.SCALE_SMOOTH);
+        this.scaledRoomImage = roomBackground.getScaledInstance(backW, backH, Image.SCALE_SMOOTH); // делаем только 1 раз
         
         // задний фон
         this.backgroundTexture = ImageIO.read(new File(PathFinder.findFile("misc/Rooms/Back3.png")));
@@ -70,7 +69,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         int miniMapW = miniMapSize + (int)((double)miniMapSize * 0.4); 
         int miniMapH = miniMapSize;  
 
-        BufferedImage miniMap = ImageIO.read(new File(room.getminiMapPath()));                   
+        BufferedImage miniMap = ImageIO.read(new File(room.getminiMapPath()));      // делаем только 1 раз              
         this.scaledMiniMap = miniMap.getScaledInstance(miniMapW, miniMapH, Image.SCALE_SMOOTH);
         
         if (alex == null) {
@@ -87,13 +86,15 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int border = 100;
         
+        // проблема главная была в том что здесь использовался getScaledInstance(каждый кадр работа с размером изображения), а также чтение файла ImageIcon (многоразовое обращение к файловой системе)
+
         // Рисуем из КЭША 
         if (backgroundTexture != null) {
             g.drawImage(backgroundTexture, 0, 0, screenSize.width, screenSize.height, null);
         }
         
-        if (scaledBackground != null) {
-            g.drawImage(scaledBackground, border - 10, border - 10, null);
+        if (scaledRoomImage != null) {
+            g.drawImage(scaledRoomImage, border - 10, border - 10, null);
         }
         
         if (scaledMiniMap != null) {
@@ -110,7 +111,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
         //this.add(wIcon);
 
-        alex.draw(g); // алекс
+        alex.draw(g);
     
         // Отрисовка компонентов
         drawDoors(g);
@@ -126,6 +127,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
     private void drawDoors(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
+
         for (Door door : room.getDoors()) {
             if (door.image != null) {
                 g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null);
@@ -136,6 +138,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private void drawKeys(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
         Key key = room.getKey();
+
         if (key != null && !key.isKeyCollected()) {
             g.setColor(java.awt.Color.YELLOW);
             g.drawImage(key.image, (int)key.getX(), (int)key.getY(), null, null);
@@ -144,7 +147,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
     private void drawChests(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
-        
+
         for (Chest chest : room.getChest()) {
             if (chest != null && !chest.isChestCollected()) {
                 g.setColor(java.awt.Color.BLUE);
@@ -156,7 +159,6 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private void checkProximities(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
         
-        // двери
         for (Door door : room.getDoors()) {
             if (door.isObjectNear(alex.getX(), alex.getY())) {
                 g.drawString("Нажми E", (int)door.getX(), (int)door.getY() - 10);
@@ -164,13 +166,11 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
             }
         }
 
-        // ключ
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected() && key.isPlayerNear(alex.getX(), alex.getY())) {
             g.drawString("Нажми F", (int)key.getX(), (int)key.getY() - 10);
         }
 
-        // сундуки
         for (Chest chest : room.getChest()) {
             if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
                 g.drawString("Press K to open a chest", (int)chest.getX(), (int)chest.getY() - 90);
