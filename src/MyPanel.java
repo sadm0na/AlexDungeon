@@ -92,7 +92,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private void checkKeyProximity(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
         Key key = room.getKey();
-        if (key != null && key.isPlayerNear(alex.getX(), alex.getY())) {
+        if (key != null && !key.isKeyCollected() && key.isPlayerNear(alex.getX(), alex.getY())) {
             g.drawString("Нажми F", (int)key.getX(), (int)key.getY() - 10);
         }
     }
