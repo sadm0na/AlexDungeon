@@ -8,20 +8,22 @@ import javax.swing.*;
 import javax.imageio.ImageIO;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyPanel extends JPanel implements KeyEventDispatcher {
-    private Alex alex;
-    private long lastFrameTime;
-    private BufferedImage backgroundImage; // в RoomData путь будет храниться
+    // кэшируем масштабированное изображение и текстуру фона
+    private Image scaledBackground; 
+    private Image backgroundTexture;
+
     private Dungeon dungeon;
-    private boolean eKeyPressed = false; // переход в дверь через нажатие e
-    String errorMessage;
+    private Alex alex;
+    
+    private boolean eKeyPressed = false; 
+    private long lastFrameTime;
+
+    String errorMessage; // над этим мне надо поработать
+
     JLabel wIcon;
     Image scaleImage;
     Image scaleBack;
@@ -29,14 +31,17 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
     public MyPanel(Dungeon dungeon) throws IOException {
         this.dungeon = dungeon;
+        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize((int)screenSize.getWidth(), (int)screenSize.getHeight());
         this.setPreferredSize(screenSize);
-        //this.setPreferredSize(new Dimension(700, 700));
+
+        // двойная буферизация. вроде должно оптимизировать
+        setDoubleBuffered(true);
         
-        loadCurrentRoom(); // передаем данные данной комнаты и рисуем ее
+        loadCurrentRoom();
         
-        this.lastFrameTime = System.currentTimeMillis(); // сохраняем время последнего фрейма (чтобы движение из-за задержек с ума не сошло, время между обновлением кадров учитываем)
+        this.lastFrameTime = System.currentTimeMillis();
         
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(this);
@@ -44,7 +49,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     
     public void loadCurrentRoom() throws IOException {
         RoomData room = dungeon.getCurrentRoom(); // прогрузка комнаты
-        //this.backgroundImage = ImageIO.read(new File(room.getBackgroundPath()));
+        
         scaleBack = ImageIO.read(new File(room.getBackgroundPath()));
 
         int miniMapSize = 250;
@@ -71,103 +76,92 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null); // фон
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int border = 100;
+        int backW = (int)screenSize.getWidth() - border * 2;
+        int backH = (int)screenSize.getHeight() - border - 250;
+        
+        // Рисуем из КЭША 
+        if (backgroundTexture != null) {
+            g.drawImage(backgroundTexture, 0, 0, screenSize.width, screenSize.height, null);
         }
         
+        if (scaledBackground != null) {
+            g.drawImage(scaledBackground, border - 10, border - 10, null);
+        }
         
-
-        // отладка - координаты алекса
-        
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        
-        
-        int border = 100;
-
-        int miniMapSize = 200;
-        int minimapW = miniMapSize + (int)((double)miniMapSize * 0.3);
-        int minimapH = miniMapSize;
-
-        //int backSize = 800;
-        int backW = (int)screenSize.getWidth() - border * 2;
-        int backH = (int)screenSize.getHeight() - border - minimapH;
-
-        scaleBack = scaleBack.getScaledInstance(backW, backH ,Image.SCALE_DEFAULT);
-
-        ImageIcon ii = new ImageIcon(PathFinder.findFile("misc/Rooms/Back3.png"));
-
-        g.drawImage(ii.getImage(), 0,0, (int)screenSize.getWidth(),(int)screenSize.getHeight(), null, null);
-
-        g.drawImage(scaleBack,border - 10, border - 10, backW,backH ,null,null);
-
-        g.drawString("X: " + (int)alex.getX() + " Y: " + (int)alex.getY(), 10, 20);
-
-        
-        
-        
-        g.drawImage(scaleImage, (int)screenSize.getWidth() - minimapW,
-            (int)screenSize.getHeight() - minimapH - 10,minimapW,minimapH - 10,null,null);
+        if (scaleImage != null) {
+            g.drawImage(scaleImage, screenSize.width - 300, screenSize.height - 260, null);
+        }
 
 
         //this.add(wIcon);
 
         alex.draw(g); // алекс
     
-        // Отладка - дверь красной рисуем
-        RoomData room = dungeon.getCurrentRoom();
-        g.setColor(java.awt.Color.RED);
-        for (Door door : room.getDoors()) {
-            
-            g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null, null);
-            //g.drawRect((int)door.getX(), (int)door.getY(), 40, 40);
-        }
+        // Отрисовка дверей
+        drawDoors(g);
 
-        // отладка ключа (желтый) (вместо этого надо будет картинку вывести)
+        // отрисовка ключа
+        drawKeys(g);
+
+        // отрисовка сундуков
+        drawChests(g);
+
+        // проверить близость к предметам
+        checkProximities(g);
+
+        // очень важно!
+        //showCaptions(g);
+    }
+
+    private void drawDoors(Graphics g) {
+        RoomData room = dungeon.getCurrentRoom();
+        for (Door door : room.getDoors()) {
+            if (door.image != null) {
+                g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null);
+            }
+        }
+    }
+
+    private void drawKeys(Graphics g) {
+        RoomData room = dungeon.getCurrentRoom();
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected()) {
             g.setColor(java.awt.Color.YELLOW);
             g.drawImage(key.image, (int)key.getX(), (int)key.getY(), null, null);
-           // g.drawRect((int)key.getX(), (int)key.getY(), 15, 15);
         }
+    }
 
+    private void drawChests(Graphics g) {
+        RoomData room = dungeon.getCurrentRoom();
+        
         for (Chest chest : room.getChest()) {
-            //chest = room.getChest();
             if (chest != null && !chest.isChestCollected()) {
                 g.setColor(java.awt.Color.BLUE);
                 g.drawImage(chest.image, (int)chest.getX(), (int)chest.getY(), null, null);
-                //g.drawRect((int)chest.getX(), (int)chest.getY(), 45, 45);
             }   
         }
-        // если дверь/ключ рядом, появится надпись (добавить сундук. и вообще надо полиморфизм тут или хз)
-        checkDoorProximity(g);
-        checkKeyProximity(g);
-        checkChestProximity(g);
-
-        // вывод предупреждения при каком либо действии..
-        //showCaptions(g);
     }
     
-    private void checkDoorProximity(Graphics g) { // надо понять как очищать drawString (может какой то метод из Swing'a альтернативный. либо найти как с awt это сделать)
+    private void checkProximities(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
+        
+        // двери
         for (Door door : room.getDoors()) {
             if (door.isObjectNear(alex.getX(), alex.getY())) {
                 g.drawString("Нажми E", (int)door.getX(), (int)door.getY() - 10);
                 break;
             }
         }
-    }
 
-    private void checkKeyProximity(Graphics g) {
-        RoomData room = dungeon.getCurrentRoom();
+        // ключ
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected() && key.isPlayerNear(alex.getX(), alex.getY())) {
             g.drawString("Нажми F", (int)key.getX(), (int)key.getY() - 10);
         }
-    }
 
-     private void checkChestProximity(Graphics g) {
-        RoomData room = dungeon.getCurrentRoom();
+        // сундуки
         for (Chest chest : room.getChest()) {
             if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
                 g.drawString("Press K to open a chest", (int)chest.getX(), (int)chest.getY() - 90);

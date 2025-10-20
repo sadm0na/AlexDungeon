@@ -1,26 +1,8 @@
 package src;
 import javax.swing.*;
 
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.*;
-import javax.imageio.ImageIO;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-
-
-// import src.Game;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import java.io.IOException;
 
@@ -189,7 +171,7 @@ public class Dungeon {
         while (true) {
             frame.repaint();
             panel.updateWorldPhysics();
-            //Thread.sleep(20);
+            Thread.sleep(16); // ограничение фпс обязательно, а то процессор на полную катку будет работать что не очень безопасно и правильно, около 60 кадров.
         }
     }
     
