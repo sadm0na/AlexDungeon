@@ -13,7 +13,7 @@ public class RoomData { // сюда надо будет засунуть и су
     private double playerStartY;
     private List<Door> doors;
     private Key key;
-    private Chest chest;
+    private List<Chest> chests;
     private boolean visited;
     private String miniMapPath;
 
@@ -24,6 +24,7 @@ public class RoomData { // сюда надо будет засунуть и су
         this.playerStartX = startX;
         this.playerStartY = startY;
         this.doors = new ArrayList<>();
+        this.chests = new ArrayList<>();
         this.visited = false;
     }
     
@@ -36,8 +37,8 @@ public class RoomData { // сюда надо будет засунуть и су
         this.key = new Key(position[0], position[1]);
     }
     
-    public void addChest(int X, int Y) {
-        this.chest = new Chest(X, Y);
+    public void addChest(int X, int Y, int type, int h) {
+        chests.add(new Chest(X, Y, type, h));
     }
 
     public String getBackgroundPath() {
@@ -64,8 +65,8 @@ public class RoomData { // сюда надо будет засунуть и су
         return key;
     }
 
-    public Chest getChest() {
-        return chest;
+    public List<Chest> getChest() {
+        return chests;
     }
     
     public boolean isVisited() {
@@ -94,8 +95,8 @@ public class RoomData { // сюда надо будет засунуть и су
         int borderLeft = border; // x = 50;
         int borderLeftPlus = borderLeft + keySize; //x = 55
         int borderUp = border - 10; // y = 50;
-        int borderDown = border - 10 + backH - keySize;// y = 320;
-        int borderDownPlus = border - 10 + backH + keySize;// y = 325;
+        int borderDown = border - 50 + backH - keySize;// y = 320;
+        int borderDownPlus = borderDown + keySize;// y = 325;
 
         int[][][] walls = {{{borderLeft, borderLeftPlus}, {borderLeftPlus, borderDown}},
             {{borderLeftPlus, borderDown}, {borderLeft, borderLeftPlus}}, 

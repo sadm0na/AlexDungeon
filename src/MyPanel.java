@@ -12,6 +12,9 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyPanel extends JPanel implements KeyEventDispatcher {
     private Alex alex;
     private long lastFrameTime;
@@ -116,28 +119,26 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         g.setColor(java.awt.Color.RED);
         for (Door door : room.getDoors()) {
             
-            ImageIcon door_ii = new ImageIcon(PathFinder.findFile("misc/Doors/Door1.png"));
-            //ImageIcon door_ii = new ImageIcon(PathFinder.findFile("misc/Chests/closedChest1.png"));
-            Image doorImage = door_ii.getImage();
-            doorImage = doorImage.getScaledInstance(50,45,Image.SCALE_DEFAULT);
-            g.drawImage(doorImage,(int)door.getX(), (int)door.getY(), null, null);
-            g.drawRect((int)door.getX(), (int)door.getY(), 40, 40);
+            g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null, null);
+            //g.drawRect((int)door.getX(), (int)door.getY(), 40, 40);
         }
 
         // отладка ключа (желтый) (вместо этого надо будет картинку вывести)
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected()) {
             g.setColor(java.awt.Color.YELLOW);
-            g.drawRect((int)key.getX(), (int)key.getY(), 15, 15);
+            g.drawImage(key.image, (int)key.getX(), (int)key.getY(), null, null);
+           // g.drawRect((int)key.getX(), (int)key.getY(), 15, 15);
         }
 
-        Chest chest = room.getChest();
-        if (chest != null && !chest.isChestCollected()) {
-            g.setColor(java.awt.Color.BLUE);
-            g.drawImage(chest.image, (int)chest.getX(), (int)chest.getY(), null, null);
-            //g.drawRect((int)chest.getX(), (int)chest.getY(), 45, 45);
+        for (Chest chest : room.getChest()) {
+            //chest = room.getChest();
+            if (chest != null && !chest.isChestCollected()) {
+                g.setColor(java.awt.Color.BLUE);
+                g.drawImage(chest.image, (int)chest.getX(), (int)chest.getY(), null, null);
+                //g.drawRect((int)chest.getX(), (int)chest.getY(), 45, 45);
+            }   
         }
-
         // если дверь/ключ рядом, появится надпись (добавить сундук. и вообще надо полиморфизм тут или хз)
         checkDoorProximity(g);
         checkKeyProximity(g);
@@ -160,16 +161,17 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private void checkKeyProximity(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
         Key key = room.getKey();
-        if (key != null && key.isPlayerNear(alex.getX(), alex.getY())) {
+        if (key != null && !key.isKeyCollected() && key.isPlayerNear(alex.getX(), alex.getY())) {
             g.drawString("Нажми F", (int)key.getX(), (int)key.getY() - 10);
         }
     }
 
      private void checkChestProximity(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
-        Chest chest = room.getChest();
-        if (chest != null && chest.isPlayerNear(alex.getX(), alex.getY())) {
-            g.drawString("Press K to open a chest", (int)chest.getX(), (int)chest.getY() - 90);
+        for (Chest chest : room.getChest()) {
+            if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
+                g.drawString("Press K to open a chest", (int)chest.getX(), (int)chest.getY() - 90);
+            }
         }
     }
 
@@ -185,7 +187,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         RoomData room = dungeon.getCurrentRoom();
         int roomID = dungeon.getCurrentRoomId();
         Key roomKey = room.getKey();
-        Chest roomChest = room.getChest();
+        List<Chest> roomChests = room.getChest();
         
         if (key.getID() == KeyEvent.KEY_PRESSED) {
             switch (keyCode) {
@@ -213,11 +215,13 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                     }
                     break;
                 case KeyEvent.VK_K:
-                    if (roomChest != null) {
-                        roomChest.collectChest();
+                    for (Chest roomChest : roomChests) {
+                        if (roomChest != null && roomChest.isPlayerNear(alex.getX(), alex.getY())) {
+                            roomChest.collectChest(dungeon.getFrame());
+                            dungeon.changeHP(roomChest);
+                        }
                     }
                     break;
-
             }
         }
         

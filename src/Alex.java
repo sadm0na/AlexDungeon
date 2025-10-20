@@ -83,10 +83,10 @@ public class Alex {
         int backH = (int)screenSize.getHeight() - border - minimapH;
 
         //border - 10, border - 10, backW,backH 
-        int leftBorder = border - 10;
-        int rightBorder = leftBorder + backW;
+        int leftBorder = border - 18;
+        int rightBorder = leftBorder + backW - 75;
         int upBorder = border - 10;
-        int downBorder = border + backH + 10;
+        int downBorder = border - 52  + backH;
 
         if (newX >= leftBorder && newX <= rightBorder) {
             x = newX;
