@@ -1,16 +1,19 @@
 package src;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.*;
 import javax.imageio.ImageIO;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyPanel extends JPanel implements KeyEventDispatcher {
     private Alex alex;
@@ -19,10 +22,17 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private Dungeon dungeon;
     private boolean eKeyPressed = false; // переход в дверь через нажатие e
     String errorMessage;
-    
+    JLabel wIcon;
+    Image scaleImage;
+    Image scaleBack;
+    Image walls;
+
     public MyPanel(Dungeon dungeon) throws IOException {
         this.dungeon = dungeon;
-        this.setPreferredSize(new Dimension(400, 400));
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize((int)screenSize.getWidth(), (int)screenSize.getHeight());
+        this.setPreferredSize(screenSize);
+        //this.setPreferredSize(new Dimension(700, 700));
         
         loadCurrentRoom(); // передаем данные данной комнаты и рисуем ее
         
@@ -34,7 +44,21 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     
     public void loadCurrentRoom() throws IOException {
         RoomData room = dungeon.getCurrentRoom(); // прогрузка комнаты
-        this.backgroundImage = ImageIO.read(new File(room.getBackgroundPath()));
+        //this.backgroundImage = ImageIO.read(new File(room.getBackgroundPath()));
+        scaleBack = ImageIO.read(new File(room.getBackgroundPath()));
+
+        int miniMapSize = 250;
+        int minimapW = miniMapSize + (int)((double)miniMapSize * 0.4);
+        int minimapH = miniMapSize;
+
+        BufferedImage wPic = ImageIO.read(new File(room.getminiMapPath()));
+        
+        ImageIcon icon = new ImageIcon(wPic);
+        scaleImage = icon.getImage().getScaledInstance(minimapW, minimapH,Image.SCALE_DEFAULT);
+        wIcon = new JLabel(new ImageIcon(scaleImage));
+        wIcon.setBounds(300,300, minimapW, minimapH);
+        
+        //wIcon.setBounds(300,300, 30, 30);
         
         if (alex == null) {
             alex = new Alex(room.getPlayerStartX(), room.getPlayerStartY());
@@ -51,29 +75,74 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null); // фон
         }
         
-        alex.draw(g); // алекс
+        
 
         // отладка - координаты алекса
+        
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        
+        
+        int border = 100;
+
+        int miniMapSize = 200;
+        int minimapW = miniMapSize + (int)((double)miniMapSize * 0.3);
+        int minimapH = miniMapSize;
+
+        //int backSize = 800;
+        int backW = (int)screenSize.getWidth() - border * 2;
+        int backH = (int)screenSize.getHeight() - border - minimapH;
+
+        scaleBack = scaleBack.getScaledInstance(backW, backH ,Image.SCALE_DEFAULT);
+
+        ImageIcon ii = new ImageIcon(PathFinder.findFile("misc/Rooms/Back3.png"));
+
+        g.drawImage(ii.getImage(), 0,0, (int)screenSize.getWidth(),(int)screenSize.getHeight(), null, null);
+
+        g.drawImage(scaleBack,border - 10, border - 10, backW,backH ,null,null);
+
         g.drawString("X: " + (int)alex.getX() + " Y: " + (int)alex.getY(), 10, 20);
+
         
         
+        
+        g.drawImage(scaleImage, (int)screenSize.getWidth() - minimapW,
+            (int)screenSize.getHeight() - minimapH - 10,minimapW,minimapH - 10,null,null);
+
+
+        //this.add(wIcon);
+
+        alex.draw(g); // алекс
+    
         // Отладка - дверь красной рисуем
         RoomData room = dungeon.getCurrentRoom();
         g.setColor(java.awt.Color.RED);
         for (Door door : room.getDoors()) {
-            g.drawRect((int)door.getX(), (int)door.getY(), 40, 40);
+            
+            g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null, null);
+            //g.drawRect((int)door.getX(), (int)door.getY(), 40, 40);
         }
 
         // отладка ключа (желтый) (вместо этого надо будет картинку вывести)
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected()) {
             g.setColor(java.awt.Color.YELLOW);
-            g.drawRect((int)key.getX(), (int)key.getY(), 15, 15);
+            g.drawImage(key.image, (int)key.getX(), (int)key.getY(), null, null);
+           // g.drawRect((int)key.getX(), (int)key.getY(), 15, 15);
         }
 
+        for (Chest chest : room.getChest()) {
+            //chest = room.getChest();
+            if (chest != null && !chest.isChestCollected()) {
+                g.setColor(java.awt.Color.BLUE);
+                g.drawImage(chest.image, (int)chest.getX(), (int)chest.getY(), null, null);
+                //g.drawRect((int)chest.getX(), (int)chest.getY(), 45, 45);
+            }   
+        }
         // если дверь/ключ рядом, появится надпись (добавить сундук. и вообще надо полиморфизм тут или хз)
         checkDoorProximity(g);
         checkKeyProximity(g);
+        checkChestProximity(g);
 
         // вывод предупреждения при каком либо действии..
         //showCaptions(g);
@@ -97,6 +166,15 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         }
     }
 
+     private void checkChestProximity(Graphics g) {
+        RoomData room = dungeon.getCurrentRoom();
+        for (Chest chest : room.getChest()) {
+            if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
+                g.drawString("Press K to open a chest", (int)chest.getX(), (int)chest.getY() - 90);
+            }
+        }
+    }
+
     /* 
     public void showCaptions(Graphics g) { // надо понять как на время вывести это. по истечении времени сообщения опять null должно стать
         
@@ -109,6 +187,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         RoomData room = dungeon.getCurrentRoom();
         int roomID = dungeon.getCurrentRoomId();
         Key roomKey = room.getKey();
+        List<Chest> roomChests = room.getChest();
         
         if (key.getID() == KeyEvent.KEY_PRESSED) {
             switch (keyCode) {
@@ -135,7 +214,14 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                         }
                     }
                     break;
-
+                case KeyEvent.VK_K:
+                    for (Chest roomChest : roomChests) {
+                        if (roomChest != null && roomChest.isPlayerNear(alex.getX(), alex.getY())) {
+                            roomChest.collectChest(dungeon.getFrame());
+                            dungeon.changeHP(roomChest);
+                        }
+                    }
+                    break;
             }
         }
         
@@ -150,6 +236,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                     alex.stopRunningY();
                     break;
                 case KeyEvent.VK_E:
+                    eKeyPressed = false;
+                    break;
+                case KeyEvent.VK_K:
                     eKeyPressed = false;
                     break;
             }

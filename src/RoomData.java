@@ -2,19 +2,29 @@ package src;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
+
 public class RoomData { // сюда надо будет засунуть и сундуки и ключики
     private String backgroundPath;
     private double playerStartX;
     private double playerStartY;
     private List<Door> doors;
     private Key key;
+    private List<Chest> chests;
     private boolean visited;
+    private String miniMapPath;
+
     
-    public RoomData(String backgroundPath, double startX, double startY) {
+    public RoomData(String backgroundPath, String miniMapPath, double startX, double startY) {
         this.backgroundPath = backgroundPath;
+        this.miniMapPath = miniMapPath;
         this.playerStartX = startX;
         this.playerStartY = startY;
         this.doors = new ArrayList<>();
+        this.chests = new ArrayList<>();
         this.visited = false;
     }
     
@@ -27,8 +37,16 @@ public class RoomData { // сюда надо будет засунуть и су
         this.key = new Key(position[0], position[1]);
     }
     
+    public void addChest(int X, int Y, int type, int h) {
+        chests.add(new Chest(X, Y, type, h));
+    }
+
     public String getBackgroundPath() {
         return backgroundPath;
+    }
+
+    public String getminiMapPath() {
+        return miniMapPath;
     }
     
     public double getPlayerStartX() {
@@ -46,6 +64,10 @@ public class RoomData { // сюда надо будет засунуть и су
     public Key getKey() {
         return key;
     }
+
+    public List<Chest> getChest() {
+        return chests;
+    }
     
     public boolean isVisited() {
         return visited;
@@ -57,7 +79,29 @@ public class RoomData { // сюда надо будет засунуть и су
 
     // рандомная координата вблизи стены
     private int[] getRandomKeyPosition() { // {320, 325}
-        int[][][] walls = {{{50, 55}, {55, 320}}, {{55, 320}, {50, 55}}, {{320, 325}, {55, 320}}, {{55, 320}, {320, 325}}}; // когда размеры фрема поменяются это надо будет изменить
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        int border = 100;
+
+        int miniMapSize = 200;
+        int minimapW = miniMapSize + (int)((double)miniMapSize * 0.3);
+        int minimapH = miniMapSize;
+
+        //int backSize = 800;
+        int backW = (int)screenSize.getWidth() - border * 2;
+        int backH = (int)screenSize.getHeight() - border - minimapH;
+
+        int keySize = 5;
+        int borderLeft = border; // x = 50;
+        int borderLeftPlus = borderLeft + keySize; //x = 55
+        int borderUp = border - 10; // y = 50;
+        int borderDown = border - 50 + backH - keySize;// y = 320;
+        int borderDownPlus = borderDown + keySize;// y = 325;
+
+        int[][][] walls = {{{borderLeft, borderLeftPlus}, {borderLeftPlus, borderDown}},
+            {{borderLeftPlus, borderDown}, {borderLeft, borderLeftPlus}}, 
+            {{borderDown, borderDownPlus }, {borderLeftPlus, borderDown}}, 
+            {{borderLeftPlus, borderDown}, {borderDown, borderDownPlus }}}; // когда размеры фрема поменяются это надо будет изменить
         boolean isSpaceAvailable = false;
         boolean noDoorsAround = true;
         int[] keyPosiiton = new int[2];

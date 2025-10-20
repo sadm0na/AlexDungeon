@@ -100,6 +100,7 @@ class monster extends Cards {
                 return false;
             }
         }
+
         AlexCards.hp -= hp;
         if (AlexCards.hp <= 0) {
             AlexCards.renewString();
@@ -253,7 +254,6 @@ class Game implements ActionListener {
     }
 
     public Game( int level, int maxHp, int strengthPlus) {
-        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.level = level;
         this.maxHp = maxHp;
@@ -271,6 +271,7 @@ class Game implements ActionListener {
         alexCoor = new coordinants(1, 1);
         for (int i = 0; i < 9; i++) {
             if (i == 4) {
+
                 arrayListCards.add(new AlexCards(maxHp));
             } else {
                 arrayListCards.add(new Cards().randomCards(level, strengthPlus));
@@ -346,7 +347,6 @@ class Game implements ActionListener {
         frame.setVisible(false);
         if (status == -1)
             return false;
-        
         return true;
     }
 
