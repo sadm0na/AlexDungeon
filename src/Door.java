@@ -30,10 +30,8 @@ public class Door { // позиция, размеры двери, и то куд
     }
     
     public boolean isObjectNear(double objectX, double objectY) { // дубликаты часто используются. надо наверное в отдельный класс items вынести эти функции
-        int nearArea = 100;
-        return (Math.pow(x - objectX, 2) + Math.pow(y - objectY, 2) < 10000);
-        // objectX >= x && objectX <= x + width + nearArea &&
-              // objectY >= y && objectY <= y + height + nearArea;
+        int nearArea = 50;
+        return (Math.pow(x - objectX, 2) + Math.pow(y - objectY, 2) < Math.pow(nearArea, 2));
     }
     
     public int getTargetRoomId() {

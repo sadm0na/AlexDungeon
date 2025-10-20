@@ -41,7 +41,8 @@ public class Chest {
     }
 
     public boolean isPlayerNear(double playerX, double playerY) { // проверяю попадает ли в окружность ключа..?
-        return (Math.pow((x - width / 2) - playerX, 2) + Math.pow((y - height /2)  - playerY, 2)) < 10000;
+        int nearArea = 50;
+        return (Math.pow((x - width / 2) - playerX, 2) + Math.pow((y - height /2)  - playerY, 2)) < Math.pow(nearArea, 2);
     }
 
     public int getHealth() {

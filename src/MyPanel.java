@@ -53,7 +53,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         int border = 100;
         int backW = (int)screenSize.getWidth() - border * 2;
-        int backH = (int)screenSize.getHeight() - border - 250;
+        int backH = (int)screenSize.getHeight() - border - 200;
         
         // все скейлы и тд и тп делаются только 1 раз когда хотим загрузить комнату
 
@@ -65,8 +65,8 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         this.backgroundTexture = ImageIO.read(new File(PathFinder.findFile("misc/Rooms/Back3.png")));
         
         // загрузка и масштабирование мини карты
-        int miniMapSize = 250;
-        int miniMapW = miniMapSize + (int)((double)miniMapSize * 0.4); 
+        int miniMapSize = 200;
+        int miniMapW = miniMapSize + (int)((double)miniMapSize * 0.3); 
         int miniMapH = miniMapSize;  
 
         BufferedImage miniMap = ImageIO.read(new File(room.getminiMapPath()));      // делаем только 1 раз              
@@ -98,25 +98,25 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         }
         
         if (scaledMiniMap != null) {
-            int miniMapSize = 250;
-            int minimapW = miniMapSize + (int)((double)miniMapSize * 0.4);  
+            int miniMapSize = 200;
+            int minimapW = miniMapSize + (int)((double)miniMapSize * 0.3);  
             int minimapH = miniMapSize;                                     
             
             int miniMapX = screenSize.width - minimapW;
             int miniMapY = screenSize.height - minimapH - 10;
-            
+
             g.drawImage(scaledMiniMap, miniMapX, miniMapY, null);
         }
 
 
         //this.add(wIcon);
-
-        alex.draw(g);
     
         // Отрисовка компонентов
         drawDoors(g);
         drawKeys(g);
         drawChests(g);
+
+        alex.draw(g); // алекс поверх предметов должен ходить
 
         // проверить близость к предметам
         checkProximities(g);
@@ -130,6 +130,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
         for (Door door : room.getDoors()) {
             if (door.image != null) {
+                g.setColor(java.awt.Color.RED);
                 g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null);
             }
         }
@@ -173,7 +174,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
         for (Chest chest : room.getChest()) {
             if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
-                g.drawString("Press K to open a chest", (int)chest.getX(), (int)chest.getY() - 90);
+                g.drawString("Press K to open a chest", (int)chest.getX(), (int)chest.getY() - 20);
             }
         }
     }

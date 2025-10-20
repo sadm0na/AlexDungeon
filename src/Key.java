@@ -29,7 +29,8 @@ public class Key {
     }
 
     public boolean isPlayerNear(double playerX, double playerY) { // проверяю попадает ли в окружность ключа..?
-        return Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2) < 10000;
+        int nearArea = 70;
+        return Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2) < Math.pow(nearArea, 2);
     }
 
     public double getX() {
