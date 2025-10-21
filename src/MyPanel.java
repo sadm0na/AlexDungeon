@@ -62,7 +62,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         this.scaledRoomImage = roomBackground.getScaledInstance(backW, backH, Image.SCALE_SMOOTH); // делаем только 1 раз
         
         // задний фон
-        this.backgroundTexture = ImageIO.read(new File(PathFinder.findFile("misc/Rooms/Back3.png")));
+        this.backgroundTexture = ImageIO.read(new File(PathFinder.findFile("misc/Rooms/Firelights.png")));
         
         // загрузка и масштабирование мини карты
         int miniMapSize = 200;
