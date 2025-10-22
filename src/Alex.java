@@ -76,17 +76,16 @@ public class Alex {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
         int border = 100;
-        int miniMapSize = 250;
-        int minimapH = miniMapSize;
+        int backW = (int)screenSize.getWidth() - border * 2 - 50; // подогнала под myPanel
+        int backH = (int)screenSize.getHeight() - border - 200;  
 
-        int backW = (int)screenSize.getWidth() - border * 2;
-        int backH = (int)screenSize.getHeight() - border - minimapH;
-
-        //border - 10, border - 10, backW,backH 
-        int leftBorder = border - 18;
-        int rightBorder = leftBorder + backW - 75;
-        int upBorder = border - 10;
-        int downBorder = border - 52  + backH;
+        // центрирую как в MyPanel
+        int roomX = (screenSize.width - backW) / 2; 
+        
+        int leftBorder = roomX - 10;                      
+        int rightBorder = roomX + backW - 75;       
+        int upBorder = border - 10;               
+        int downBorder = border - 10 + backH - 95;   
 
         if (newX >= leftBorder && newX <= rightBorder) {
             x = newX;

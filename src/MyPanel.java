@@ -52,7 +52,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
         int border = 100;
-        int backW = (int)screenSize.getWidth() - border * 2;
+        int backW = (int)screenSize.getWidth() - border * 2 - 50;
         int backH = (int)screenSize.getHeight() - border - 200;
         
         // все скейлы и тд и тп делаются только 1 раз когда хотим загрузить комнату
@@ -66,7 +66,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         // загрузка и масштабирование мини карты
         int miniMapSize = 200;
-        int miniMapW = miniMapSize + (int)((double)miniMapSize * 0.3); 
+        int miniMapW = miniMapSize + (int)((double)miniMapSize * 0.8); 
         int miniMapH = miniMapSize;  
 
         BufferedImage miniMap = ImageIO.read(new File(room.getminiMapPath()));      // делаем только 1 раз              
@@ -85,6 +85,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int border = 100;
+        int backW = (int)screenSize.getWidth() - border * 2 - 50;
         
         // проблема главная была в том что здесь использовался getScaledInstance(каждый кадр работа с размером изображения), а также чтение файла ImageIcon (многоразовое обращение к файловой системе)
 
@@ -94,16 +95,17 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         }
         
         if (scaledRoomImage != null) {
-            g.drawImage(scaledRoomImage, border - 10, border - 10, null);
+            int roomX = (screenSize.width - backW) / 2;
+            g.drawImage(scaledRoomImage, roomX, border - 10, null);
         }
         
         if (scaledMiniMap != null) {
             int miniMapSize = 200;
-            int minimapW = miniMapSize + (int)((double)miniMapSize * 0.3);  
+            int minimapW = miniMapSize + (int)((double)miniMapSize * 0.8);  
             int minimapH = miniMapSize;                                     
             
-            int miniMapX = screenSize.width - minimapW;
-            int miniMapY = screenSize.height - minimapH - 10;
+            int miniMapX = screenSize.width - minimapW - 20;
+            int miniMapY = screenSize.height - minimapH - 20;
 
             g.drawImage(scaledMiniMap, miniMapX, miniMapY, null);
         }
