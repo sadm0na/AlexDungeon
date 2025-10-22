@@ -132,7 +132,6 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
         for (Door door : room.getDoors()) {
             if (door.image != null) {
-                g.setColor(java.awt.Color.RED);
                 g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null);
             }
         }
@@ -164,19 +163,19 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         for (Door door : room.getDoors()) {
             if (door.isObjectNear(alex.getX(), alex.getY())) {
-                g.drawString("Нажми E", (int)door.getX(), (int)door.getY() - 10);
+                TextHints.drawSpeechBubble(g, "Press E", (int)alex.getX() + 20, (int)alex.getY());
                 break;
             }
         }
 
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected() && key.isPlayerNear(alex.getX(), alex.getY())) {
-            g.drawString("Нажми F", (int)key.getX(), (int)key.getY() - 10);
+            TextHints.drawSpeechBubble(g, "Press F", (int)alex.getX() + 20, (int)alex.getY());
         }
 
         for (Chest chest : room.getChest()) {
             if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
-                g.drawString("Press K to open a chest", (int)chest.getX(), (int)chest.getY() - 20);
+                TextHints.drawSpeechBubble(g, "Press K to open the chest", (int)alex.getX() + 20, (int)alex.getY());
             }
         }
     }

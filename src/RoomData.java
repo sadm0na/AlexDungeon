@@ -82,21 +82,18 @@ public class RoomData { // сюда надо будет засунуть и су
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         int border = 100;
-
-        int miniMapSize = 200;
-        int minimapW = miniMapSize + (int)((double)miniMapSize * 0.3);
-        int minimapH = miniMapSize;
-
-        //int backSize = 800;
-        int backW = (int)screenSize.getWidth() - border * 2;
-        int backH = (int)screenSize.getHeight() - border - minimapH;
+        int backW = (int)screenSize.getWidth() - border * 2 - 50; // ← ТАКОЙ ЖЕ РАСЧЕТ КАК В MyPanel
+        int backH = (int)screenSize.getHeight() - border - 200;   // ← ТАКОЙ ЖЕ РАСЧЕТ КАК В MyPanel
+        
+        // Центрируем комнату как в MyPanel
+        int roomX = (screenSize.width - backW) / 2; // ← ЦЕНТРИРОВАНИЕ КАК В MyPanel
 
         int keySize = 5;
-        int borderLeft = border; // x = 50;
-        int borderLeftPlus = borderLeft + keySize; //x = 55
-        int borderUp = border - 10; // y = 50;
-        int borderDown = border - 50 + backH - keySize;// y = 320;
-        int borderDownPlus = borderDown + keySize;// y = 325;
+        int borderLeft = roomX;                      // ← ЛЕВАЯ ГРАНИЦА = позиция комнаты
+        int borderLeftPlus = borderLeft + keySize;   // x = roomX + 5
+        int borderUp = border - 10;                  // y = 90 (верх комнаты)
+        int borderDown = border - 10 + backH - keySize - 95; // y = нижняя граница с учетом offset
+        int borderDownPlus = borderDown + keySize;   // y = borderDown + 5
 
         int[][][] walls = {{{borderLeft, borderLeftPlus}, {borderLeftPlus, borderDown}},
             {{borderLeftPlus, borderDown}, {borderLeft, borderLeftPlus}}, 

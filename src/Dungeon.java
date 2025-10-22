@@ -58,16 +58,21 @@ public class Dungeon {
         int doorWidth = 40;
         int doorHeight = 40;
 
-        int centerHorizontal = (int)screenSize.getWidth() / 2 - doorWidth / 2; //x = 175
-        int borderLeft = border - 15; // x = 50;
-        int borderRight = border - 10 + backW - doorWidth - 30; // x = 300
-        int centerVertical = backH / 2 + border - doorHeight / 2; // y = 180;
-        int borderUp = border - 10; // y = 50;
-        int borderDown = border - 60 + backH - doorHeight;// y = 310;
-        int oneThirdHorizontal = (int)screenSize.getWidth() / 3 - doorWidth / 2;
-        int secondThirdHorizontal = 2 * (int)screenSize.getWidth() / 3 - doorWidth / 2;
-        int oneThirdVertical = backH / 3 + border - doorHeight / 2;
-        int secondThirdVertical = 2 * backH / 3 + border - doorHeight / 2;
+        // учитываем центрирование комнаты
+        int roomX = (screenSize.width - backW) / 2; // ← позиция комнаты по X
+        int roomY = border - 10;                    // ← позиция комнаты по Y
+
+        int centerHorizontal = roomX + backW / 2 - doorWidth / 2;
+        int borderLeft = roomX + 20;                          // подгонка координат. это грустно
+        int borderRight = roomX + backW - doorWidth - 55; // подгонка
+        int centerVertical = roomY + backH / 2 - doorHeight / 2;
+        int borderUp = roomY;
+        int borderDown = roomY + backH - doorHeight - 45;     // подгонка
+
+        int oneThirdHorizontal = roomX + backW / 3 - doorWidth / 2;
+        int secondThirdHorizontal = roomX + 2 * backW / 3 - doorWidth / 2;
+        int oneThirdVertical = roomY + backH / 3 - doorHeight / 2;
+        int secondThirdVertical = roomY + 2 * backH / 3 - doorHeight / 2;
         
         // первая комната, дверь справа только
         rooms[0] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
@@ -82,7 +87,7 @@ public class Dungeon {
         rooms[0].addChest(centerHorizontal, centerVertical, 0, 0);
 
         // вторая комната
-        rooms[1] = new RoomData(PathFinder.findFile("misc/Rooms/Room3_1.png"),
+        rooms[1] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
             PathFinder.findFile("misc/MiniMap/Map2W.png"), 200, 200);
         rooms[1].addDoor(new Door(centerHorizontal, borderDown, doorWidth, doorHeight, 0)); // дом
         rooms[1].addDoor(new Door(borderRight, centerVertical, doorWidth, doorHeight, 2)); // второй уровень
@@ -91,7 +96,7 @@ public class Dungeon {
         rooms[1].addChest(secondThirdHorizontal, oneThirdVertical,2, 5);
         
         // третья комната
-        rooms[2] = new RoomData(PathFinder.findFile("misc/Rooms/Room3_2.png"),
+        rooms[2] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
             PathFinder.findFile("misc/MiniMap/Map3W.png"), 200, 200);
         rooms[2].addDoor(new Door(centerHorizontal, borderUp, doorWidth, doorHeight, 1)); // первый уровень
         rooms[2].addDoor(new Door(borderRight, centerVertical, doorWidth, doorHeight, 3)); // третий уровень
@@ -100,7 +105,7 @@ public class Dungeon {
         rooms[2].addChest(centerHorizontal, oneThirdVertical, 2, 5);
 
         // четвертая комната
-        rooms[3] = new RoomData(PathFinder.findFile("misc/Rooms/Room3_3.png"),
+        rooms[3] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
             PathFinder.findFile("misc/MiniMap/Map4W.png"), 200, 200);
         rooms[3].addDoor(new Door(borderLeft, centerVertical, doorWidth, doorHeight, 2)); // второй уровень
         rooms[3].addDoor(new Door(centerHorizontal, borderDown, doorWidth, doorHeight, 4)); // босс
@@ -109,7 +114,7 @@ public class Dungeon {
         rooms[3].addChest(oneThirdHorizontal, secondThirdVertical, 2, 1);
 
         // пятая комната
-        rooms[4] = new RoomData(PathFinder.findFile("misc/Rooms/Room3_4.png"),
+        rooms[4] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
             PathFinder.findFile("misc/MiniMap/Map5W.png"), 200, 200);
         rooms[4].addDoor(new Door(borderRight, centerVertical, doorWidth, doorHeight, 3)); // третий уровень
         rooms[4].addDoor(new Door(centerHorizontal, borderUp, doorWidth, doorHeight, 0)); // дом
@@ -117,7 +122,7 @@ public class Dungeon {
         //rooms[4].addChest(centerHorizontal, centerVertical, 1, 1);
         
         // шестая комната
-        rooms[5] = new RoomData(PathFinder.findFile("misc/Rooms/Room3_5.png"),
+        rooms[5] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
             PathFinder.findFile("misc/MiniMap/Map6W.png"), 200, 200);
         rooms[5].addDoor(new Door(borderRight,centerVertical, doorWidth, doorHeight, 0)); // дом
         rooms[5].addChest(centerHorizontal, centerVertical,3 ,1);
