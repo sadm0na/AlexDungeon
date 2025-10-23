@@ -87,8 +87,8 @@ public class Dungeon {
         rooms[1].addDoor(new Door(centerHorizontal, borderDown, doorWidth, doorHeight, 0)); // дом
         rooms[1].addDoor(new Door(borderRight, centerVertical, doorWidth, doorHeight, 2)); // второй уровень
         rooms[1].addKey();
-        rooms[1].addChest(oneThirdHorizontal, centerVertical,1, 5);
-        rooms[1].addChest(secondThirdHorizontal, oneThirdVertical,2, 5);
+        rooms[1].addChest(oneThirdHorizontal, centerVertical,1, 3);
+        rooms[1].addChest(secondThirdHorizontal, oneThirdVertical,2, 3);
         
         // третья комната
         rooms[2] = new RoomData(PathFinder.findFile("misc/Rooms/Room3_2.png"),
@@ -96,8 +96,8 @@ public class Dungeon {
         rooms[2].addDoor(new Door(centerHorizontal, borderUp, doorWidth, doorHeight, 1)); // первый уровень
         rooms[2].addDoor(new Door(borderRight, centerVertical, doorWidth, doorHeight, 3)); // третий уровень
         rooms[2].addKey();
-        rooms[2].addChest(secondThirdVertical, secondThirdVertical, 1, 5);
-        rooms[2].addChest(centerHorizontal, oneThirdVertical, 2, 5);
+        rooms[2].addChest(secondThirdVertical, secondThirdVertical, 1, 4);
+        rooms[2].addChest(centerHorizontal, oneThirdVertical, 2, 2);
 
         // четвертая комната
         rooms[3] = new RoomData(PathFinder.findFile("misc/Rooms/Room3_3.png"),
@@ -105,8 +105,8 @@ public class Dungeon {
         rooms[3].addDoor(new Door(borderLeft, centerVertical, doorWidth, doorHeight, 2)); // второй уровень
         rooms[3].addDoor(new Door(centerHorizontal, borderDown, doorWidth, doorHeight, 4)); // босс
         rooms[3].addKey();
-        rooms[3].addChest(secondThirdVertical, centerVertical, 1, 1);
-        rooms[3].addChest(oneThirdHorizontal, secondThirdVertical, 2, 1);
+        rooms[3].addChest(secondThirdVertical, centerVertical, 1, 5);
+        rooms[3].addChest(oneThirdHorizontal, secondThirdVertical, 2, 3);
 
         // пятая комната
         rooms[4] = new RoomData(PathFinder.findFile("misc/Rooms/Room3_4.png"),
@@ -141,7 +141,7 @@ public class Dungeon {
     
     public void changeHP(Chest h) {
         health += h.getHealth();
-
+        strength += h.getStrength();
     }
 
 
@@ -153,7 +153,7 @@ public class Dungeon {
             panel.loadCurrentRoom();
         } else {
             int lvl = currentRoomId + 1;
-            Game game = new Game(1, health,0);
+            Game game = new Game(lvl, health, strength);
             boolean b = game.GameControl();
             if (b) {
                 currentRoomId = newRoomId;

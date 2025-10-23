@@ -1,0 +1,16 @@
+Hello, Alex. Do not forget the rules of the dungeon:
+- To open a door you need a key 
+- One key opens one door 
+- To collect a key, a chest or open a door go closer to them and push a required button
+While fighting with card monsters keep in mind that: 
+- You have health level, ones it is <= 0 you die. It can be increased by poisons, but cann't go higher then your maximal health
+- You have strength - it is bigger than 0 if you hold a sword. 
+- You have money - ones you have enoght coins you have won the fight
+- You can hold only one sword at a time. If you collect a sword with bigger strength - you drop previous automatically
+- If you have 0 strength and you attack the monster: 
+            -  If your hp is bigger than monster's  - monster's hp is decreased to zero, but your hp will decrease by he same amount
+            -  In other case - you die
+- If you have strength >= 0 and you attack the monster - monster's hp will be decreased by your the strength level, but your strength will drop by the same amount
+- If monster's hp is zero - it is defended and you receive the reward money
+Good luck!
+PS: Just remind you - if you want to run faster hold SHIFT
