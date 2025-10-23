@@ -18,7 +18,7 @@ public class Alex {
     private ImageIcon alexImage;
     private double x;
     private double y;
-    private double RunningSpeed;
+    double RunningSpeed;
     private int xRunningDirection;
     private int yRunningDirection;
     

@@ -151,7 +151,8 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         RoomData room = dungeon.getCurrentRoom();
 
         for (Chest chest : room.getChest()) {
-            if (chest != null && !chest.isChestCollected()) {
+            //!chest.isChestCollected()
+            if (chest != null) {
                 g.setColor(java.awt.Color.BLUE);
                 g.drawImage(chest.image, (int)chest.getX(), (int)chest.getY(), null, null);
             }   
@@ -212,7 +213,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                     eKeyPressed = true;
                     break;
                 case KeyEvent.VK_F:
-                    if (roomKey != null) {
+                    if (roomKey != null && roomKey.isPlayerNear(alex.getX(), alex.getY())) {
                         roomKey.collectKey();
                         if (roomID == 4) {
                             dungeon.makeTreasuryAvalilable();
@@ -226,6 +227,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                             dungeon.changeHP(roomChest);
                         }
                     }
+                    break;
+                case KeyEvent.VK_SHIFT:
+                    alex.RunningSpeed = 0.3;
                     break;
             }
         }
@@ -245,6 +249,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                     break;
                 case KeyEvent.VK_K:
                     eKeyPressed = false;
+                    break;
+                case KeyEvent.VK_SHIFT:
+                    alex.RunningSpeed = 0.15;
                     break;
             }
         }

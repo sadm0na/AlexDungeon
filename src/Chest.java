@@ -1,10 +1,10 @@
 package src;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 import javax.imageio.ImageIO;
 
 import java.awt.*;
@@ -35,9 +35,27 @@ public class Chest {
         this.x = x;
         this.y = y;
         this.isCollected = false;
-        ImageIcon img = new ImageIcon(PathFinder.findFile("misc/Chests/closedChest1.png"));
+        ImageIcon img = new ImageIcon(PathFinder.findFile("misc/Chests/closedChest0.png"));
+        if (type == 0) {
+            img = new ImageIcon(PathFinder.findFile("misc/Chests/closedChest0.png"));
+        }
+        if (type == 1) {
+            img = new ImageIcon(PathFinder.findFile("misc/Chests/closedChest1.png"));
+        }
+        if (type == 2) {
+            img = new ImageIcon(PathFinder.findFile("misc/Chests/closedChest2.png"));
+        }
+        if (type == 3) {
+            img = new ImageIcon(PathFinder.findFile("misc/Chests/closedChest3.png"));
+        }
         image = img.getImage();
         image = image.getScaledInstance(50,45,Image.SCALE_DEFAULT);
+        if (type == 0) {
+            image = image.getScaledInstance(80,50,Image.SCALE_DEFAULT);
+        }
+        if (type == 3) {
+            image = image.getScaledInstance(100,60,Image.SCALE_DEFAULT);
+        }
     }
 
     public boolean isPlayerNear(double playerX, double playerY) { // проверяю попадает ли в окружность ключа..?
@@ -68,7 +86,26 @@ public class Chest {
     public void collectChest(JFrame frame) {
         if (!isCollected) {
             if (type == 0) {
-                JOptionPane.showMessageDialog(frame.getComponent(0), "Read the instruction to the game: ");
+                
+                Scanner scanner = null;
+                String line = "";
+                try{
+                    scanner = new Scanner(new File(PathFinder.findFile("misc/Chests/intro.txt")));
+
+                    while (scanner.hasNextLine()) {
+
+                        String st = scanner.nextLine();
+                        line += "\n" + st;
+                        
+                        //System.out.println(line); // Обработка строки, возможно, с последующим разбором на части
+
+                    }
+                } catch (FileNotFoundException fe) {
+                    //System.out.println(fe);
+                }
+                JOptionPane.showMessageDialog(frame.getComponent(0), "Read the instruction to the game: " + line);
+
+
             } else {
                 if (type == 1) {
                     JOptionPane.showMessageDialog(frame.getComponent(0), "You have +" + health + " to your maximal hp!");
@@ -76,11 +113,32 @@ public class Chest {
                     if (type == 2) {
                         JOptionPane.showMessageDialog(frame.getComponent(0), "You have +" + strength + " strength to all swords!");
                     } else {
-                        JOptionPane.showMessageDialog(frame.getComponent(0), "You have have won the game!");
+                        JOptionPane.showMessageDialog(frame.getComponent(0), "You have won the game!");
                     }
                 }
             }
         }
         isCollected = true;
+        ImageIcon img = new ImageIcon(PathFinder.findFile("misc/Chests/openedChest0.png"));
+        if (type == 0) {
+            img = new ImageIcon(PathFinder.findFile("misc/Chests/openedChest0.png"));
+        }
+        if (type == 1) {
+            img = new ImageIcon(PathFinder.findFile("misc/Chests/openedChest1.png"));
+        }
+        if (type == 2) {
+            img = new ImageIcon(PathFinder.findFile("misc/Chests/openedChest2.png"));
+        }
+        if (type == 3) {
+            img = new ImageIcon(PathFinder.findFile("misc/Chests/openedChest3.png"));
+        }
+        image = img.getImage();
+        image = image.getScaledInstance(50,45,Image.SCALE_DEFAULT);
+        if (type == 0) {
+            image = image.getScaledInstance(80,50,Image.SCALE_DEFAULT);
+        }
+        if (type == 3) {
+            image = image.getScaledInstance(100,60,Image.SCALE_DEFAULT);
+        }
     }
 }

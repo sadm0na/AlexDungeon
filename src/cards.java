@@ -77,15 +77,15 @@ class monster extends Cards {
         Random random = new Random();
         hp = random.nextInt(5) + 2;
         money = random.nextInt(5) + 2;
-        string = "hp: " + hp + "             raward for killing: " + money + "$";
+        string = "hp: " + hp + "             reward for killing: " + money + "$";
     }
 
     public monster(int level) {
         img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster.jpg"));
         Random random = new Random();
-        hp = random.nextInt(5) + level * 2;
+        hp = random.nextInt(5) + level * 4;
         money = random.nextInt(5) + level * 2;
-        string = "hp: " + hp + "             raward for killing: " + money + "$";
+        string = "hp: " + hp + "             reward for killing: " + money + "$";
     }
     
     @Override
@@ -113,7 +113,7 @@ class monster extends Cards {
 
     @Override
     void renewString() {
-        string = "hp: " + hp + "             raward for killing: " + money + "$";
+        string = "hp: " + hp + "             reward for killing: " + money + "$";
     }
 }
 
@@ -135,14 +135,6 @@ class poison extends Cards {
 }
 
 class sword extends Cards {
-
-    public sword() {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/sword.png"));
-        Random random = new Random();
-        sword = random.nextInt(5) + 2;
-        string = "Sword strength: " + sword;
-        
-    }
 
     public sword(int strengthPlus) {
         img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/sword.png"));
