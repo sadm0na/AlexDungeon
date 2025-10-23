@@ -37,8 +37,8 @@ public class RoomData { // сюда надо будет засунуть и су
         this.key = new Key(position[0], position[1]);
     }
     
-    public void addChest(int X, int Y, int type, int h) {
-        chests.add(new Chest(X, Y, type, h));
+    public void addChest(int X, int Y, int type, int hm, MyPanel panel) {
+        chests.add(new Chest(X, Y, type, hm, panel));
     }
 
     public String getBackgroundPath() {

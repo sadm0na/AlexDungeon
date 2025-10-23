@@ -13,6 +13,7 @@ import java.util.*;
 import javax.swing.*;
 
 public class Chest {
+    private MyPanel panel;
     private double x;
     private double y;
     private boolean isCollected;
@@ -24,7 +25,9 @@ public class Chest {
     private int height = 45;
 
 
-    public Chest(double x, double y, int type, int h) {
+    public Chest(double x, double y, int type, int h, MyPanel panel) {
+        this.panel = panel;
+
         this.type = type;
         if (type == 1) {
             health = h;
@@ -32,6 +35,7 @@ public class Chest {
         if (type == 2) {
             strength = h;
         }
+
         this.x = x;
         this.y = y;
         this.isCollected = false;
@@ -108,18 +112,23 @@ public class Chest {
 
             } else {
                 if (type == 1) {
-                    JOptionPane.showMessageDialog(frame.getComponent(0), "You have +" + health + " to your maximal hp!");
+                    panel.setChestMessage("You have +" + health + " to your maximal hp!");
+                    //JOptionPane.showMessageDialog(frame.getComponent(0), "You have +" + health + " to your maximal hp!");
                 } else {
                     if (type == 2) {
-                        JOptionPane.showMessageDialog(frame.getComponent(0), "You have +" + strength + " strength to all swords!");
+                        panel.setChestMessage("You have +" + strength + " strength to all swords!");
+                        //JOptionPane.showMessageDialog(frame.getComponent(0), "You have +" + strength + " strength to all swords!");
                     } else {
-                        JOptionPane.showMessageDialog(frame.getComponent(0), "You have won the game!");
+                        panel.setChestMessage("You have won the game!");
+                        //JOptionPane.showMessageDialog(frame.getComponent(0), "You have won the game!");
                     }
                 }
             }
         }
+
         isCollected = true;
         ImageIcon img = new ImageIcon(PathFinder.findFile("misc/Chests/openedChest0.png"));
+
         if (type == 0) {
             img = new ImageIcon(PathFinder.findFile("misc/Chests/openedChest0.png"));
         }

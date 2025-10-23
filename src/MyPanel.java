@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.WatchEvent;
 
 import javax.swing.*;
 import javax.imageio.ImageIO;
@@ -25,12 +26,19 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     private boolean eKeyPressed = false; 
     private long lastFrameTime;
 
-    private String errorMessage; // над этим мне надо поработать
+    // Система сообщений
+    private String warningMessage = null;
+    private long warningStartTime = 0;
+    private final long WARNING_DURATION = 3500; // 3.5 секунды
+
+    private String chestMessage = null;
+    private long chestStartTime = 0;
+
 
     JLabel wIcon;
     Image walls;
 
-    public MyPanel(Dungeon dungeon) throws IOException {
+    public MyPanel(Dungeon dungeon, boolean loadRoom) throws IOException {
         this.dungeon = dungeon;
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -39,7 +47,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         setDoubleBuffered(true); // в инете пишут ускоряет как то работу, хз как. наверное без разницы есть эта строка или нет
 
-        loadCurrentRoom();
+        if (loadRoom) {
+            loadCurrentRoom();
+        }
         
         this.lastFrameTime = System.currentTimeMillis();
         
@@ -114,46 +124,30 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         //this.add(wIcon);
     
         // Отрисовка компонентов
-        drawDoors(g);
-        drawKeys(g);
-        drawChests(g);
-
+        drawObjects(g);
         alex.draw(g); // алекс поверх предметов должен ходить
 
-        // проверить близость к предметам
+        // надписи
         checkProximities(g);
-
-        // очень важно!
-        //showCaptions(g);
+        showMessages(g);
     }
 
-    private void drawDoors(Graphics g) {
+    private void drawObjects(Graphics g) {
         RoomData room = dungeon.getCurrentRoom();
+        Key key = room.getKey();
 
         for (Door door : room.getDoors()) {
             if (door.image != null) {
                 g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null);
             }
         }
-    }
-
-    private void drawKeys(Graphics g) {
-        RoomData room = dungeon.getCurrentRoom();
-        Key key = room.getKey();
 
         if (key != null && !key.isKeyCollected()) {
-            g.setColor(java.awt.Color.YELLOW);
             g.drawImage(key.image, (int)key.getX(), (int)key.getY(), null, null);
         }
-    }
-
-    private void drawChests(Graphics g) {
-        RoomData room = dungeon.getCurrentRoom();
 
         for (Chest chest : room.getChest()) {
-            //!chest.isChestCollected()
             if (chest != null) {
-                g.setColor(java.awt.Color.BLUE);
                 g.drawImage(chest.image, (int)chest.getX(), (int)chest.getY(), null, null);
             }   
         }
@@ -181,11 +175,37 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         }
     }
 
-    /* 
-    public void showCaptions(Graphics g) { // надо понять как на время вывести это. по истечении времени сообщения опять null должно стать
-        
+    public void setChestMessage(String message) {
+        this.chestMessage = message;
+        this.chestStartTime = System.currentTimeMillis();
     }
-    */
+    
+    public void setWarningMessage(String message) {
+        this.warningMessage = message;
+        this.warningStartTime = System.currentTimeMillis();
+    }
+
+    private void updateMessages() {
+        long currentTime = System.currentTimeMillis();
+        
+        if (chestMessage != null && currentTime - chestStartTime > WARNING_DURATION) {
+            chestMessage = null;
+        }
+        if (warningMessage != null && currentTime - warningStartTime > WARNING_DURATION) {
+            warningMessage = null;
+        }
+    }
+
+    public void showMessages(Graphics g) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        
+        if (chestMessage != null) {
+            Messages.showMessage(g, chestMessage, screenSize.width, screenSize.height, 1); // снизу
+        }
+        if (warningMessage != null) {
+            Messages.showMessage(g, warningMessage, screenSize.width, screenSize.height, 0); // сверху
+        }
+    }
     
     @Override
     public boolean dispatchKeyEvent(KeyEvent key) {
@@ -265,6 +285,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         alex.update(timeDifference); // передвижение перса
         
+        // сообщения завязанные на времени
+        updateMessages();
+
         // ароверяем переход в другую комнату
         if (eKeyPressed) {
             checkRoomTransition();
@@ -283,18 +306,19 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
                 // говнокод. упростить. (не считая перрвый if)
                 if (nextRoomId == 5 && !dungeon.isTreasuryAvailable()) {
+                    setWarningMessage("Kill the boss to unlock treasury!");
                     return;
                 } else if ((nextRoomId == 4 && roomId == 0) && !dungeon.getSpecificRoom(nextRoomId).getKey().isKeyCollected()) { // переход между боссом и домом
+                    setWarningMessage("Win other lvl's to unlock boss fight!");
                     return;
                 } else if ((nextRoomId > roomId || nextRoomId == 0 && roomId == 4) && !room.getKey().isKeyCollected()) { 
-                    // errorMessage = "Pick up the key!";        чуть позже. надо сделать так чтобы выскакивало предупреждение на условные 10 секунд хз. короче функцию написать для всяких выводов.
+                    setWarningMessage("Grab the key!");
                     return;
                 }
 
                 try {
                     dungeon.changeRoom(door.getTargetRoomId());
                     eKeyPressed = false;
-                    // errorMessage = null; // ??
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

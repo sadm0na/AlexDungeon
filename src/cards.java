@@ -54,7 +54,7 @@ class Cards {
 class AlexCards extends Cards {
     
     public AlexCards(int hp) {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/alex.jpeg"));
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/alexW.png"));
         money = 0;
         this.hp = hp;
         sword = 0;
@@ -73,7 +73,7 @@ class AlexCards extends Cards {
 class monster extends Cards {
 
     public monster() {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster.jpg"));
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster1.png"));
         Random random = new Random();
         hp = random.nextInt(5) + 2;
         money = random.nextInt(5) + 2;
@@ -81,7 +81,7 @@ class monster extends Cards {
     }
 
     public monster(int level) {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster.jpg"));
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster1.png"));
         Random random = new Random();
         hp = random.nextInt(5) + level * 4;
         money = random.nextInt(5) + level * 2;
@@ -120,7 +120,7 @@ class monster extends Cards {
 class poison extends Cards {
 
     public poison() {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/poison.png"));
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/healthW.png"));
         Random random = new Random();
         hp = random.nextInt(5) + 2;
         string = "+" + hp + " to hp";
@@ -137,7 +137,7 @@ class poison extends Cards {
 class sword extends Cards {
 
     public sword(int strengthPlus) {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/sword.png"));
+        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/sword1.png"));
         Random random = new Random();
         sword = random.nextInt(5) + 2 + strengthPlus;
         string = "Sword strength: " + sword;
@@ -270,7 +270,7 @@ class Game implements ActionListener {
             }
         }
         // creates window not visible yet
-        ImageIcon img = new ImageIcon(PathFinder.findFile("misc/CardsGame/alex.jpeg"));
+        ImageIcon img = new ImageIcon(PathFinder.findFile("misc/CardsGame/alexW.png"));
         button = new JButton("+6 hp", img); // creates button
         button.setActionCommand("1");
 
@@ -282,33 +282,42 @@ class Game implements ActionListener {
         Color backgroundButton = new Color(137, 158, 140); // creates helper object:
         int sizeButton = (int)screenSize.getWidth()/6+15;
         int otsp = (int)screenSize.getWidth() / 2 - sizeButton - (sizeButton) / 2 ;
-        frame.setContentPane(new JLabel(new ImageIcon(PathFinder.findFile("misc/CardsGame/backgrond.jpg"))));
+        frame.setContentPane(new JLabel(new ImageIcon(PathFinder.findFile("misc/CardsGame/darkbackgrond.jpg"))));
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 arrayList.add(new JButton(arrayListCards.get(i * 3 + j).getString(),
                      arrayListCards.get(i * 3 + j).getImageIcon()));
                 JButton button2 = arrayList.get(i * 3 + j);; // creates button
 
-                button2.setBounds(otsp + j * sizeButton, 40 + i * sizeButton, sizeButton , sizeButton);
+                button2.setBounds(otsp + j * sizeButton, 60 + i * sizeButton, sizeButton , sizeButton);
                 button2.setVerticalTextPosition(SwingConstants.TOP);
                 button2.setHorizontalTextPosition(SwingConstants.CENTER);
                 button2.addActionListener(this);
-                button2.setBackground(backgroundButton);
+
+                // надо сделать кнопку непрозрачной но с прозрачным фоном
+                button2.setOpaque(false); // делаем прозрачной
+                button2.setContentAreaFilled(true); 
+                                
+                // бордеры у кнопок
+                button2.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 215), 3));
+                
+                // фон кнопки полупрозрачный
+                button2.setBackground(new Color(0, 0, 0, 200)); 
+        
                 button2.setActionCommand("" + (int)(i * 3 + j));
-                //frame.add(button, BorderLayout.SOUTH);
                 frame.add(button2);
             }
         }
 
-        Color backgrounfColor = new Color(214, 138, 242); // creates helper object:
-        JLabel textArea = new JLabel("You need " + levelMoney + " coins to win.");
+        Color backgrounfColor = new Color(255, 215, 0, 180); // creates helper object:
+        JLabel textArea = new JLabel("You need " + levelMoney + " coins to win, warrior.");
          //JTextArea textArea = new JTextArea("You need " + levelMoney + " coins to win.");
-        textArea.setFont(new Font("Serif", Font.BOLD, 22));
+        textArea.setFont(new Font("Monospace", Font.BOLD, 22));
         textArea.setForeground(backgrounfColor);
         //textArea.setBackground(backgrounfColor);
         //textArea.setLineWrap(true);
         //textArea.setWrapStyleWord(true);
-        textArea.setBounds(otsp,5,700,40);
+        textArea.setBounds(otsp,7,700,40);
         frame.add(textArea);
         //.setPreferredSize(new Dimension(60,60));
         //button.setPreferredSize(60,60);
