@@ -3,7 +3,22 @@ package src;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
-public class TextHints {
+public class Messages {
+
+    // public void displayMessage(Graphics g, String message, int x, int y, int mode) {
+    //     if (mode == 0) {
+    //         drawSpeechBubble(g, message, x, y);
+    //         return;
+    //     }
+
+    //     double countdown = 3;
+
+    //     while (countdown >= 0) {
+
+    //     }
+    // }
+
+
     public static void drawSpeechBubble(Graphics g, String message, int x, int y) {
         Graphics2D g2d = (Graphics2D) g;
         
@@ -28,7 +43,6 @@ public class TextHints {
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRoundRect(x, y - bubbleHeight - 5, bubbleWidth, bubbleHeight, 10, 10);
         
-        // текст немного съезжает
         g2d.setColor(Color.WHITE);
         g2d.drawString(message, x + padding, y - 10);
         

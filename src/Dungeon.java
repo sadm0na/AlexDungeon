@@ -59,8 +59,8 @@ public class Dungeon {
         int doorHeight = 40;
 
         // учитываем центрирование комнаты
-        int roomX = (screenSize.width - backW) / 2; // ← позиция комнаты по X
-        int roomY = border - 10;                    // ← позиция комнаты по Y
+        int roomX = (screenSize.width - backW) / 2; // позиция комнаты по X
+        int roomY = border - 10;                    // позиция комнаты по Y
 
         int centerHorizontal = roomX + backW / 2 - doorWidth / 2;
         int borderLeft = roomX + 20;                          // подгонка координат. это грустно

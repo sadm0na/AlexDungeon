@@ -163,19 +163,19 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         for (Door door : room.getDoors()) {
             if (door.isObjectNear(alex.getX(), alex.getY())) {
-                TextHints.drawSpeechBubble(g, "Press E", (int)alex.getX() + 20, (int)alex.getY());
+                Messages.drawSpeechBubble(g, "Press E", (int)alex.getX() + 20, (int)alex.getY());
                 break;
             }
         }
 
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected() && key.isPlayerNear(alex.getX(), alex.getY())) {
-            TextHints.drawSpeechBubble(g, "Press F", (int)alex.getX() + 20, (int)alex.getY());
+            Messages.drawSpeechBubble(g, "Press F", (int)alex.getX() + 20, (int)alex.getY());
         }
 
         for (Chest chest : room.getChest()) {
             if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
-                TextHints.drawSpeechBubble(g, "Press K to open the chest", (int)alex.getX() + 20, (int)alex.getY());
+                Messages.drawSpeechBubble(g, "Press K to open the chest", (int)alex.getX() + 20, (int)alex.getY());
             }
         }
     }
