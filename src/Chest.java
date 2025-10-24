@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-public class Chest {
+public class Chest implements Sizes{
     private double x;
     private double y;
     private boolean isCollected;
@@ -20,8 +20,6 @@ public class Chest {
     private int health = 0;
     private int strength = 0;
     Image image;
-    private int width = 50;
-    private int height = 45;
 
 
     public Chest(double x, double y, int type, int h) {
@@ -49,18 +47,12 @@ public class Chest {
             img = new ImageIcon(PathFinder.findFile("misc/Chests/closedChest3.png"));
         }
         image = img.getImage();
-        image = image.getScaledInstance(50,45,Image.SCALE_DEFAULT);
-        if (type == 0) {
-            image = image.getScaledInstance(80,50,Image.SCALE_DEFAULT);
-        }
-        if (type == 3) {
-            image = image.getScaledInstance(100,60,Image.SCALE_DEFAULT);
-        }
+        image = image.getScaledInstance((int) (chestWeight[type] * wholeScreenW),
+            (int) (chestHeight[type] * wholeScreenH), Image.SCALE_DEFAULT);
     }
 
     public boolean isPlayerNear(double playerX, double playerY) { // проверяю попадает ли в окружность ключа..?
-        int nearArea = 50;
-        return (Math.pow((x - width / 2) - playerX, 2) + Math.pow((y - height /2)  - playerY, 2)) < Math.pow(nearArea, 2);
+        return (Math.pow((x - chestWeight[type] / 2) - playerX, 2) + Math.pow((y - chestHeight[type] /2)  - playerY, 2)) < Math.pow(chestNearArea, 2);
     }
 
     public int getHealth() {
@@ -133,12 +125,7 @@ public class Chest {
             img = new ImageIcon(PathFinder.findFile("misc/Chests/openedChest3.png"));
         }
         image = img.getImage();
-        image = image.getScaledInstance(50,45,Image.SCALE_DEFAULT);
-        if (type == 0) {
-            image = image.getScaledInstance(80,50,Image.SCALE_DEFAULT);
-        }
-        if (type == 3) {
-            image = image.getScaledInstance(100,60,Image.SCALE_DEFAULT);
-        }
+        image = image.getScaledInstance((int) (chestWeight[type] * wholeScreenW),
+            (int) (chestHeight[type] * wholeScreenH), Image.SCALE_DEFAULT);
     }
 }

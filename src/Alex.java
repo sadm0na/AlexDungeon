@@ -14,7 +14,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-public class Alex {
+public class Alex implements Sizes {
     private ImageIcon alexImage;
     private double x;
     private double y;
@@ -25,7 +25,7 @@ public class Alex {
     public Alex(double x, double y) throws IOException {
         this.x = x;
         this.y = y;
-        this.RunningSpeed = 0.15;
+        this.RunningSpeed = 0.00010;
         this.xRunningDirection = 0;
         this.yRunningDirection = 0;
         
@@ -34,12 +34,10 @@ public class Alex {
     }
     
     public void draw(Graphics g) {
-        int imageX = (int) x;
-        int imageY = (int) y;
         
         Image ai = alexImage.getImage();
-        ai = ai.getScaledInstance(90,100,Image.SCALE_DEFAULT);
-        g.drawImage(ai, imageX, imageY, null);
+        ai = ai.getScaledInstance((int) (alexWeigth * wholeScreenW), (int) (alexHeight * wholeScreenH),Image.SCALE_DEFAULT);
+        g.drawImage(ai, (int) ( x * wholeScreenW) , (int) (y * wholeScreenH), null);
     }
     
     public void runUp() {
@@ -72,28 +70,15 @@ public class Alex {
         
         newX += timeDifference * RunningSpeed * xRunningDirection;
         newY += timeDifference * RunningSpeed * yRunningDirection;
+ 
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        
-        int border = 100;
-        int backW = (int)screenSize.getWidth() - border * 2 - 50; // подогнала под myPanel
-        int backH = (int)screenSize.getHeight() - border - 200;  
-
-        // центрирую как в MyPanel
-        int roomX = (screenSize.width - backW) / 2; 
-        
-        int leftBorder = roomX - 10;                      
-        int rightBorder = roomX + backW - 75;       
-        int upBorder = border - 10;               
-        int downBorder = border - 10 + backH - 95;   
-
-        if (newX >= leftBorder && newX <= rightBorder) {
+        if (newX >= borderLeftInner && newX <= borderRightInner - alexWeigth) {
             x = newX;
         } else {
             stopRunningX();
         }
         
-        if (newY >= upBorder && newY <= downBorder) {
+        if (newY >= borderUpInner && newY <= borderDownInner - alexHeight) {
             y = newY;
         } else {
             stopRunningY();

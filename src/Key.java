@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-public class Key {
+public class Key implements Sizes{
     private double x;
     private double y;
     private boolean isCollected;
@@ -25,12 +25,12 @@ public class Key {
         this.isCollected = false;
         ImageIcon img = new ImageIcon(PathFinder.findFile("misc/Keys/key.png"));
         image = img.getImage();
-        image = image.getScaledInstance(30,45,Image.SCALE_DEFAULT);
+        image = image.getScaledInstance((int) (keyWidth * wholeScreenW),
+             (int) (keyHeight * wholeScreenH), Image.SCALE_DEFAULT);
     }
 
     public boolean isPlayerNear(double playerX, double playerY) { // проверяю попадает ли в окружность ключа..?
-        int nearArea = 70;
-        return Math.pow(x - playerX, 2) + Math.pow(y - playerY, 2) < Math.pow(nearArea, 2);
+        return Math.pow(x - (playerX + alexWeigth / 2), 2) + Math.pow(y - (playerY + alexHeight / 2), 2) < Math.pow(keyNearArea, 2);
     }
 
     public double getX() {

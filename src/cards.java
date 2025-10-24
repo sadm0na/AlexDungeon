@@ -1,25 +1,25 @@
 package src;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-class Cards {
+class Cards implements Sizes{
     int hp; // health
     int money; 
-    int sword;
-    ImageIcon img;
+    int sword; // strength of the sword
+    Image image;
     String string;
 
     /**
      * For overloading later.
      **/
     void actionCard() {
-
     }
 
-    public ImageIcon getImageIcon() {
-        return img;
+    public Image getImageIcon() {
+        return image;
     }
 
     public String getString() {
@@ -54,7 +54,10 @@ class Cards {
 class AlexCards extends Cards {
     
     public AlexCards(int hp) {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/alex.jpeg"));
+        ImageIcon imageI = new ImageIcon(PathFinder.findFile("misc/CardsGame/alexW.png"));
+        image = imageI.getImage();
+        image = image.getScaledInstance((int) (cardWeight * wholeScreenW),
+             (int) (cardHeight * wholeScreenH), Image.SCALE_DEFAULT);
         money = 0;
         this.hp = hp;
         sword = 0;
@@ -72,16 +75,24 @@ class AlexCards extends Cards {
 
 class monster extends Cards {
 
-    public monster() {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster.jpg"));
-        Random random = new Random();
-        hp = random.nextInt(5) + 2;
-        money = random.nextInt(5) + 2;
-        string = "hp: " + hp + "             reward for killing: " + money + "$";
-    }
-
     public monster(int level) {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster.jpg"));
+        ImageIcon imageI;
+        imageI = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster6.png"));
+        if (level == 2) {
+            imageI = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster2.png"));
+        }
+        if (level == 3) {
+            imageI = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster3.png"));
+        }
+        if (level == 4) {
+            imageI = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster4.png"));
+        }
+        if (level == 5) {
+            imageI = new ImageIcon(PathFinder.findFile("misc/CardsGame/monster5.png"));
+        }
+        image = imageI.getImage();
+        image = image.getScaledInstance((int) (cardWeight * wholeScreenW),
+             (int) (cardHeight * wholeScreenH), Image.SCALE_DEFAULT);
         Random random = new Random();
         hp = random.nextInt(5) + level * 4;
         money = random.nextInt(5) + level * 2;
@@ -120,7 +131,10 @@ class monster extends Cards {
 class poison extends Cards {
 
     public poison() {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/poison.png"));
+        ImageIcon imageI = new ImageIcon(PathFinder.findFile("misc/CardsGame/healthW.png"));
+        image = imageI.getImage();
+        image = image.getScaledInstance((int) (cardWeight * wholeScreenW),
+             (int) (cardHeight * wholeScreenH), Image.SCALE_DEFAULT);
         Random random = new Random();
         hp = random.nextInt(5) + 2;
         string = "+" + hp + " to hp";
@@ -137,7 +151,10 @@ class poison extends Cards {
 class sword extends Cards {
 
     public sword(int strengthPlus) {
-        img  = new ImageIcon(PathFinder.findFile("misc/CardsGame/sword.png"));
+        ImageIcon imageI = new ImageIcon(PathFinder.findFile("misc/CardsGame/sword1.png"));
+        image = imageI.getImage();
+        image = image.getScaledInstance((int) (cardWeight * wholeScreenW),
+             (int) (cardHeight * wholeScreenH), Image.SCALE_DEFAULT);
         Random random = new Random();
         sword = random.nextInt(5) + 2 + strengthPlus;
         string = "Sword strength: " + sword;
@@ -173,7 +190,7 @@ class coordinants {
     }
 }
 
-class Game implements ActionListener {
+class Game implements ActionListener, Sizes {
     coordinants alexCoor;
     ArrayList<Cards> arrayListCards = new ArrayList<Cards>();
     ArrayList<JButton> arrayList = new ArrayList<JButton>();
@@ -201,11 +218,11 @@ class Game implements ActionListener {
             arrayListCards.get(alexCoor.x * 3 + alexCoor.y).hp = Math.min( arrayListCards.get(alexCoor.x * 3 + alexCoor.y).hp, maxHp);
             arrayListCards.get(alexCoor.x * 3 + alexCoor.y).renewString();
             button = arrayList.get(x * 3 + y);
-            button.setIcon(arrayListCards.get(x * 3 + y).img);
+            button.setIcon(new ImageIcon(arrayListCards.get(x * 3 + y).image));
             button.setText(arrayListCards.get(x * 3 + y).string);
 
             button = arrayList.get(alexCoor.x * 3 + alexCoor.y);
-            button.setIcon(arrayListCards.get(alexCoor.x * 3 + alexCoor.y).img);
+            button.setIcon(new ImageIcon(arrayListCards.get(alexCoor.x * 3 + alexCoor.y).image));
             button.setText(arrayListCards.get(alexCoor.x * 3 + alexCoor.y).string);
 
             // END MINI-GAME
@@ -222,11 +239,11 @@ class Game implements ActionListener {
             arrayListCards.set(x * 3 + y, arrayListCards.get(alexCoor.x * 3 + alexCoor.y));
             arrayListCards.set(alexCoor.x * 3 + alexCoor.y, new Cards().randomCards(level, strengthPlus));
             button = arrayList.get(x * 3 + y);
-            button.setIcon(arrayListCards.get(x * 3 + y).img);
+            button.setIcon(new ImageIcon(arrayListCards.get(x * 3 + y).image));
             button.setText(arrayListCards.get(x * 3 + y).string);
 
             button = arrayList.get(alexCoor.x * 3 + alexCoor.y);
-            button.setIcon(arrayListCards.get(alexCoor.x * 3 + alexCoor.y).img);
+            button.setIcon(new ImageIcon(arrayListCards.get(alexCoor.x * 3 + alexCoor.y).image));
             button.setText(arrayListCards.get(alexCoor.x * 3 + alexCoor.y).string);
 
             alexCoor.x = x;
@@ -270,59 +287,60 @@ class Game implements ActionListener {
             }
         }
         // creates window not visible yet
-        ImageIcon img = new ImageIcon(PathFinder.findFile("misc/CardsGame/alex.jpeg"));
-        button = new JButton("+6 hp", img); // creates button
-        button.setActionCommand("1");
-
-        button.setBounds(40, 100, 260, 260);
-        button.setVerticalTextPosition(SwingConstants.TOP);
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-
-        button.addActionListener(this);
+        ImageIcon image = new ImageIcon(PathFinder.findFile("misc/CardsGame/alexW.png"));
+        
         Color backgroundButton = new Color(137, 158, 140); // creates helper object:
-        int sizeButton = (int)screenSize.getWidth()/6+15;
-        int otsp = (int)screenSize.getWidth() / 2 - sizeButton - (sizeButton) / 2 ;
-        frame.setContentPane(new JLabel(new ImageIcon(PathFinder.findFile("misc/CardsGame/backgrond.jpg"))));
+
+       
+        
+        frame.setContentPane(new JLabel(new ImageIcon(PathFinder.findFile("misc/CardsGame/darkbackgrond.jpg"))));
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 arrayList.add(new JButton(arrayListCards.get(i * 3 + j).getString(),
-                     arrayListCards.get(i * 3 + j).getImageIcon()));
+                     new ImageIcon(arrayListCards.get(i * 3 + j).getImageIcon())));
                 JButton button2 = arrayList.get(i * 3 + j);; // creates button
 
-                button2.setBounds(otsp + j * sizeButton, 40 + i * sizeButton, sizeButton , sizeButton);
+
+                button2.setBounds((int) ((buttonBorder + j * buttonSize) * wholeScreenW),
+                     (int) (buttonBordeUp * wholeScreenH + (i * buttonSize) * wholeScreenW), (int) (buttonSize * wholeScreenW),
+                     (int) (buttonSize * wholeScreenW));
                 button2.setVerticalTextPosition(SwingConstants.TOP);
                 button2.setHorizontalTextPosition(SwingConstants.CENTER);
                 button2.addActionListener(this);
-                button2.setBackground(backgroundButton);
+
+                
+                button2.setFont(new Font("Algerian", Font.PLAIN, 12));
+                button2.setForeground(new Color(255, 128, 64));
+
+                // надо сделать кнопку непрозрачной но с прозрачным фоном
+                button2.setOpaque(false); // делаем прозрачной
+                button2.setContentAreaFilled(true); 
+                                
+                // бордеры у кнопок
+                button2.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 215), 3));
+                
+                // фон кнопки полупрозрачный
+                button2.setBackground(new Color(0, 0, 0, 200)); 
+        
                 button2.setActionCommand("" + (int)(i * 3 + j));
-                //frame.add(button, BorderLayout.SOUTH);
+
+                
                 frame.add(button2);
             }
         }
 
         Color backgrounfColor = new Color(214, 138, 242); // creates helper object:
         JLabel textArea = new JLabel("You need " + levelMoney + " coins to win.");
-         //JTextArea textArea = new JTextArea("You need " + levelMoney + " coins to win.");
-        textArea.setFont(new Font("Serif", Font.BOLD, 22));
+        textArea.setFont(new Font("Algerian", Font.BOLD, 22));
         textArea.setForeground(backgrounfColor);
-        //textArea.setBackground(backgrounfColor);
-        //textArea.setLineWrap(true);
-        //textArea.setWrapStyleWord(true);
-        textArea.setBounds(otsp,5,700,40);
+        textArea.setBounds((int) (buttonBorder * wholeScreenW),5,700,40);
         frame.add(textArea);
-        //.setPreferredSize(new Dimension(60,60));
-        //button.setPreferredSize(60,60);
-        // put component in frame: button in frame
 
         JPanel panel = new JPanel(); // creates another component
         frame.add(panel); // put panel in frame
-        //Color backgrounfColor = new Color(128, 100, 100); // creates helper object:
-        
-        // Color
+
         panel.setBackground( backgrounfColor ); // colors background panel
 
-        //frame.add(imgLabel);
-        // standard code for frames
         screenSize.getWidth();
         frame.setSize((int)screenSize.getWidth(), (int)screenSize.getHeight()); // size of window in pixels
         frame.setVisible(true); // make frame visible
@@ -355,9 +373,7 @@ class ClickReporter extends CardsMAin implements ActionListener {
     // this method will be called when a button is clicked
     @Override
     public void actionPerformed(ActionEvent e) {
-    //reaction to button click
-        //x += 5;
-        //button.setBounds(x, 100, 260, 260);
+
     }
 }
 

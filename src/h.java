@@ -1,4 +1,65 @@
+// Java Program to extract the list of Fonts
 package src;
+
+import java.awt.*;
+
+// Driver class to check available Fonts in AWT
+
+
+// Java program to test 
+// Custom available font in AWT 
+import java.awt.*;
+import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+
+import javax.swing.*;
+import java.awt.*;
+
+// Driver Class
+class SimpleJScrollPaneExample {
+      // main function
+    public static void main(String[] args) {
+      
+        JFrame frame = new JFrame("Simple JScrollPane Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 200);
+      
+        // Create a JPanel to hold a list of labels.
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+      
+        // Add a large number of labels to the panel.
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+        System.out.println("Getting the font family names");
+
+        // Array of all the fonts available in AWT
+        String fonts[] = ge.getAvailableFontFamilyNames();
+
+        // Getting the font family names
+
+        for (String i : fonts) {
+            JLabel l = new JLabel(i);
+            l.setFont(new Font(i, Font.BOLD, 30));
+            panel.add(l);
+            System.out.println(i);
+        }
+
+    
+      
+        // Create a JScrollPane and set the panel as its viewport.
+        JScrollPane scrollPane = new JScrollPane(panel);
+      
+        // Add the JScrollPane to the frame.
+        frame.add(scrollPane);
+        frame.setVisible(true);
+    }
+}
+
+
+/*package src;
 import java.util.*;
 import java.awt.*;
 
@@ -13,7 +74,7 @@ class ActionEventPanel extends JPanel implements ActionListener {
     // Create two buttons
     private JButton jbtOk = new JButton("OK");
     private JButton jbtCancel = new JButton("Cancel");
-    /** Default constructor. */
+    /** Default constructor. 
     public ActionEventPanel() {
         // Add buttons to the frame
         this.add(jbtOk);
@@ -23,7 +84,7 @@ class ActionEventPanel extends JPanel implements ActionListener {
         jbtCancel.addActionListener(this);
     }
 
-    /* This method will be invoked when a button is clicked */
+    /* This method will be invoked when a button is clicked 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("OK")) {
             System.out.println("The OK button is clicked");
@@ -42,7 +103,12 @@ class ActionEventPanel extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
     public static void main(String[] args) {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        
+         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        
+        int border = 100;
+        int backW = (int)screenSize.getHeight();
+        System.out.println(backW);
         JFrame frame = new JFrame("ActionEventPanel");
         JPanel panel = new JPanel(); // creates another component
         frame.add(panel); // put panel in frame
@@ -62,4 +128,4 @@ class ActionEventPanel extends JPanel implements ActionListener {
             //new ActionEventPanel().buildGUI();
         //});
     }
-}
+} */

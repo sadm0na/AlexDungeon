@@ -7,11 +7,13 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.imageio.ImageIO;
 
+import static src.Sizes.border;
+
 import java.awt.*;
 
 import java.util.List;
 
-public class MyPanel extends JPanel implements KeyEventDispatcher {
+public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
     // Image scaleImage;  вот эти две переменные заменяю на следующие
     // Image scaleBack;
     // кэшируем масштабированное изображение и текстуру фона
@@ -32,10 +34,9 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
     public MyPanel(Dungeon dungeon) throws IOException {
         this.dungeon = dungeon;
-        
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize((int)screenSize.getWidth(), (int)screenSize.getHeight());
-        this.setPreferredSize(screenSize);
+
+        this.setSize((int)wholeScreenW, (int)wholeScreenH);
+        this.setPreferredSize(new Dimension((int)wholeScreenW, (int)wholeScreenH));
         
         setDoubleBuffered(true); // в инете пишут ускоряет как то работу, хз как. наверное без разницы есть эта строка или нет
 
@@ -49,28 +50,20 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
     
     public void loadCurrentRoom() throws IOException {
         RoomData room = dungeon.getCurrentRoom();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        
-        int border = 100;
-        int backW = (int)screenSize.getWidth() - border * 2 - 50;
-        int backH = (int)screenSize.getHeight() - border - 200;
-        
         // все скейлы и тд и тп делаются только 1 раз когда хотим загрузить комнату
 
         // комната
         BufferedImage roomBackground = ImageIO.read(new File(room.getBackgroundPath()));
-        this.scaledRoomImage = roomBackground.getScaledInstance(backW, backH, Image.SCALE_SMOOTH); // делаем только 1 раз
+        this.scaledRoomImage = roomBackground.getScaledInstance((int) (backW * wholeScreenW), 
+            (int) (backH * wholeScreenH), Image.SCALE_SMOOTH); // делаем только 1 раз
         
         // задний фон
         this.backgroundTexture = ImageIO.read(new File(PathFinder.findFile("misc/Rooms/Firelights.png")));
         
         // загрузка и масштабирование мини карты
-        int miniMapSize = 200;
-        int miniMapW = miniMapSize + (int)((double)miniMapSize * 0.8); 
-        int miniMapH = miniMapSize;  
-
         BufferedImage miniMap = ImageIO.read(new File(room.getminiMapPath()));      // делаем только 1 раз              
-        this.scaledMiniMap = miniMap.getScaledInstance(miniMapW, miniMapH, Image.SCALE_SMOOTH);
+        this.scaledMiniMap = miniMap.getScaledInstance(
+            (int) (miniMapW *  wholeScreenW), (int) (miniMapH * wholeScreenH), Image.SCALE_SMOOTH);
         
         if (alex == null) {
             alex = new Alex(room.getPlayerStartX(), room.getPlayerStartY());
@@ -84,8 +77,8 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         super.paintComponent(g);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int border = 100;
-        int backW = (int)screenSize.getWidth() - border * 2 - 50;
+       
+
         
         // проблема главная была в том что здесь использовался getScaledInstance(каждый кадр работа с размером изображения), а также чтение файла ImageIcon (многоразовое обращение к файловой системе)
 
@@ -93,21 +86,18 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         if (backgroundTexture != null) {
             g.drawImage(backgroundTexture, 0, 0, screenSize.width, screenSize.height, null);
         }
-        
+
+        //room
         if (scaledRoomImage != null) {
-            int roomX = (screenSize.width - backW) / 2;
-            g.drawImage(scaledRoomImage, roomX, border - 10, null);
+            g.drawImage(scaledRoomImage, (int) (wholeScreenW * border), 
+                 (int) (wholeScreenH * border), null);
         }
         
-        if (scaledMiniMap != null) {
-            int miniMapSize = 200;
-            int minimapW = miniMapSize + (int)((double)miniMapSize * 0.8);  
-            int minimapH = miniMapSize;                                     
-            
-            int miniMapX = screenSize.width - minimapW - 20;
-            int miniMapY = screenSize.height - minimapH - 20;
+        //minimap
+        if (scaledMiniMap != null) {                                   
 
-            g.drawImage(scaledMiniMap, miniMapX, miniMapY, null);
+            g.drawImage(scaledMiniMap, (int) (wholeScreenW * miniMapX), 
+                (int) (wholeScreenH * miniMapY), null);
         }
 
 
@@ -132,7 +122,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
         for (Door door : room.getDoors()) {
             if (door.image != null) {
-                g.drawImage(door.image, (int)door.getX(), (int)door.getY(), null);
+                g.drawImage(door.image, (int)(wholeScreenW * door.getX()), (int)(wholeScreenH * door.getY()), null);
             }
         }
     }
@@ -143,7 +133,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
 
         if (key != null && !key.isKeyCollected()) {
             g.setColor(java.awt.Color.YELLOW);
-            g.drawImage(key.image, (int)key.getX(), (int)key.getY(), null, null);
+            g.drawImage(key.image, (int)(wholeScreenW * key.getX()), (int)(wholeScreenH * key.getY()), null, null);
         }
     }
 
@@ -154,7 +144,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
             //!chest.isChestCollected()
             if (chest != null) {
                 g.setColor(java.awt.Color.BLUE);
-                g.drawImage(chest.image, (int)chest.getX(), (int)chest.getY(), null, null);
+                g.drawImage(chest.image, (int)(wholeScreenW * chest.getX()), (int)(wholeScreenH * chest.getY()), null, null);
             }   
         }
     }
@@ -164,19 +154,19 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
         
         for (Door door : room.getDoors()) {
             if (door.isObjectNear(alex.getX(), alex.getY())) {
-                Messages.drawSpeechBubble(g, "Press E", (int)alex.getX() + 20, (int)alex.getY());
+                Messages.drawSpeechBubble(g, "Press E", (int)(wholeScreenW * (alex.getX() + dialogPlusX)), (int)(alex.getY() * wholeScreenH));
                 break;
             }
         }
 
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected() && key.isPlayerNear(alex.getX(), alex.getY())) {
-            Messages.drawSpeechBubble(g, "Press F", (int)alex.getX() + 20, (int)alex.getY());
+            Messages.drawSpeechBubble(g, "Press F", (int)(wholeScreenW * (alex.getX() + dialogPlusX)), (int)(alex.getY() * wholeScreenH));
         }
 
         for (Chest chest : room.getChest()) {
             if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
-                Messages.drawSpeechBubble(g, "Press K to open the chest", (int)alex.getX() + 20, (int)alex.getY());
+                Messages.drawSpeechBubble(g, "Press K to open the chest", (int)(wholeScreenW * (alex.getX() + dialogPlusX)), (int)(alex.getY() * wholeScreenH));
             }
         }
     }
@@ -229,7 +219,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                     }
                     break;
                 case KeyEvent.VK_SHIFT:
-                    alex.RunningSpeed = 0.3;
+                    alex.RunningSpeed = 0.00030;
                     break;
             }
         }
@@ -251,7 +241,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher {
                     eKeyPressed = false;
                     break;
                 case KeyEvent.VK_SHIFT:
-                    alex.RunningSpeed = 0.15;
+                    alex.RunningSpeed = 0.00010;
                     break;
             }
         }

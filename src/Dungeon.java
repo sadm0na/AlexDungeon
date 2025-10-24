@@ -6,7 +6,7 @@ import java.awt.Toolkit;
 
 import java.io.IOException;
 
-public class Dungeon {
+public class Dungeon implements Sizes {
     private RoomData[] rooms;
     private int currentRoomId;
     private JFrame frame;
@@ -45,87 +45,68 @@ public class Dungeon {
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        int border = 100;
-
-        int miniMapSize = 200;
-        int minimapW = miniMapSize + (int)((double)miniMapSize * 0.3);
-        int minimapH = miniMapSize;
-
-        //int backSize = 800;
-        int backW = (int)screenSize.getWidth() - border * 2;
-        int backH = (int)screenSize.getHeight() - border - minimapH;
-
-        int doorWidth = 40;
-        int doorHeight = 40;
-
         // учитываем центрирование комнаты
-        int roomX = (screenSize.width - backW) / 2; // позиция комнаты по X
-        int roomY = border - 10;                    // позиция комнаты по Y
-
-        int centerHorizontal = roomX + backW / 2 - doorWidth / 2;
-        int borderLeft = roomX + 20;                          // подгонка координат. это грустно
-        int borderRight = roomX + backW - doorWidth - 55; // подгонка
-        int centerVertical = roomY + backH / 2 - doorHeight / 2;
-        int borderUp = roomY;
-        int borderDown = roomY + backH - doorHeight - 45;     // подгонка
-
-        int oneThirdHorizontal = roomX + backW / 3 - doorWidth / 2;
-        int secondThirdHorizontal = roomX + 2 * backW / 3 - doorWidth / 2;
-        int oneThirdVertical = roomY + backH / 3 - doorHeight / 2;
-        int secondThirdVertical = roomY + 2 * backH / 3 - doorHeight / 2;
+       
         
         // первая комната, дверь справа только
         rooms[0] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
-            PathFinder.findFile("misc/MiniMap/Map1W.png"), 200, 200);
-        rooms[0].addDoor(new Door(centerHorizontal, borderUp, doorWidth,
-             doorHeight, 1)); // первый уровень
-        rooms[0].addDoor(new Door(centerHorizontal, borderDown, doorWidth, 
-            doorHeight, 4)); // комната босса
-        rooms[0].addDoor(new Door(borderLeft, centerVertical, doorWidth, 
-            doorHeight, 5)); // сокровищница
+            PathFinder.findFile("misc/MiniMap/Map1W.png"));
+        rooms[0].addDoor(new Door(centerHorizontal - doorWidth / 2, borderUp, 1)); // первый уровень
+        rooms[0].addDoor(new Door(centerHorizontal - doorWidth / 2, borderDown - doorHeight,
+             4)); // комната босса
+        rooms[0].addDoor(new Door(borderLeft, centerVertical - doorHeight / 2, 5)); // сокровищница
         rooms[0].addKey();
         rooms[0].addChest(centerHorizontal, centerVertical, 0, 0);
 
         // вторая комната
         rooms[1] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
-            PathFinder.findFile("misc/MiniMap/Map2W.png"), 200, 200);
-        rooms[1].addDoor(new Door(centerHorizontal, borderDown, doorWidth, doorHeight, 0)); // дом
-        rooms[1].addDoor(new Door(borderRight, centerVertical, doorWidth, doorHeight, 2)); // второй уровень
+            PathFinder.findFile("misc/MiniMap/Map2W.png"));
+        rooms[1].addDoor(new Door(centerHorizontal - doorWidth / 2, borderDown - doorHeight,
+             0)); // дом
+        rooms[1].addDoor(new Door(borderRight - doorWidth, centerVertical - doorHeight / 2, 
+             2)); // второй уровень
         rooms[1].addKey();
         rooms[1].addChest(oneThirdHorizontal, centerVertical,1, 3);
         rooms[1].addChest(secondThirdHorizontal, oneThirdVertical,2, 3);
         
         // третья комната
         rooms[2] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
-            PathFinder.findFile("misc/MiniMap/Map3W.png"), 200, 200);
-        rooms[2].addDoor(new Door(centerHorizontal, borderUp, doorWidth, doorHeight, 1)); // первый уровень
-        rooms[2].addDoor(new Door(borderRight, centerVertical, doorWidth, doorHeight, 3)); // третий уровень
+            PathFinder.findFile("misc/MiniMap/Map3W.png"));
+        rooms[2].addDoor(new Door(centerHorizontal - doorWidth / 2, 
+            borderUp, 1)); // первый уровень
+        rooms[2].addDoor(new Door(borderRight - doorWidth,  centerVertical - doorHeight / 2, 
+             3)); // третий уровень
         rooms[2].addKey();
         rooms[2].addChest(secondThirdVertical, secondThirdVertical, 1, 4);
         rooms[2].addChest(centerHorizontal, oneThirdVertical, 2, 2);
 
         // четвертая комната
         rooms[3] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
-            PathFinder.findFile("misc/MiniMap/Map4W.png"), 200, 200);
-        rooms[3].addDoor(new Door(borderLeft, centerVertical, doorWidth, doorHeight, 2)); // второй уровень
-        rooms[3].addDoor(new Door(centerHorizontal, borderDown, doorWidth, doorHeight, 4)); // босс
+            PathFinder.findFile("misc/MiniMap/Map4W.png"));
+        rooms[3].addDoor(new Door(borderLeft,  centerVertical - doorHeight / 2,
+              2)); // второй уровень
+        rooms[3].addDoor(new Door(centerHorizontal - doorWidth / 2, borderDown - doorHeight, 
+              4)); // босс
         rooms[3].addKey();
         rooms[3].addChest(secondThirdVertical, centerVertical, 1, 5);
         rooms[3].addChest(oneThirdHorizontal, secondThirdVertical, 2, 3);
 
         // пятая комната
         rooms[4] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
-            PathFinder.findFile("misc/MiniMap/Map5W.png"), 200, 200);
-        rooms[4].addDoor(new Door(borderRight, centerVertical, doorWidth, doorHeight, 3)); // третий уровень
-        rooms[4].addDoor(new Door(centerHorizontal, borderUp, doorWidth, doorHeight, 0)); // дом
+            PathFinder.findFile("misc/MiniMap/Map5W.png"));
+        rooms[4].addDoor(new Door(borderRight - doorWidth, centerVertical - doorHeight / 2,
+             3)); // третий уровень
+        rooms[4].addDoor(new Door(centerHorizontal - doorWidth / 2,
+             borderUp, 0)); // дом
         rooms[4].addKey();
         //rooms[4].addChest(centerHorizontal, centerVertical, 1, 1);
         
         // шестая комната
         rooms[5] = new RoomData(PathFinder.findFile("misc/Rooms/testRoom.png"),
-            PathFinder.findFile("misc/MiniMap/Map6W.png"), 200, 200);
-        rooms[5].addDoor(new Door(borderRight,centerVertical, doorWidth, doorHeight, 0)); // дом
-        rooms[5].addChest(centerHorizontal, centerVertical,3 ,1);
+            PathFinder.findFile("misc/MiniMap/Map6W.png"));
+        rooms[5].addDoor(new Door(borderRight - doorWidth, centerVertical - doorHeight / 2,
+             0)); // дом
+        rooms[5].addChest(centerHorizontal, centerVertical, 3 ,1);
     }
 
     public boolean isTreasuryAvailable() {

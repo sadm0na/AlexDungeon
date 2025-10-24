@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-public class RoomData { // сюда надо будет засунуть и сундуки и ключики
+public class RoomData implements Sizes{ // сюда надо будет засунуть и сундуки и ключики
     private String backgroundPath;
     private double playerStartX;
     private double playerStartY;
@@ -18,11 +18,11 @@ public class RoomData { // сюда надо будет засунуть и су
     private String miniMapPath;
 
     
-    public RoomData(String backgroundPath, String miniMapPath, double startX, double startY) {
+    public RoomData(String backgroundPath, String miniMapPath) {
         this.backgroundPath = backgroundPath;
         this.miniMapPath = miniMapPath;
-        this.playerStartX = startX;
-        this.playerStartY = startY;
+        this.playerStartX = alexStartX;
+        this.playerStartY = alexStartY;
         this.doors = new ArrayList<>();
         this.chests = new ArrayList<>();
         this.visited = false;
@@ -33,11 +33,11 @@ public class RoomData { // сюда надо будет засунуть и су
     }
 
     public void addKey() {
-        int[] position = getRandomKeyPosition();
+        double[] position = getRandomKeyPosition();
         this.key = new Key(position[0], position[1]);
     }
     
-    public void addChest(int X, int Y, int type, int h) {
+    public void addChest(double X, double Y, int type, int h) {
         chests.add(new Chest(X, Y, type, h));
     }
 
@@ -78,33 +78,20 @@ public class RoomData { // сюда надо будет засунуть и су
     }
 
     // рандомная координата вблизи стены
-    private int[] getRandomKeyPosition() { // {320, 325}
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        int border = 100;
-        int backW = (int)screenSize.getWidth() - border * 2 - 50; // ← ТАКОЙ ЖЕ РАСЧЕТ КАК В MyPanel
-        int backH = (int)screenSize.getHeight() - border - 200;   // ← ТАКОЙ ЖЕ РАСЧЕТ КАК В MyPanel
+    private double[] getRandomKeyPosition() { // {320, 325}
+        double[] d = {0.1, 0.2};
+        //return d;
         
-        // Центрируем комнату как в MyPanel
-        int roomX = (screenSize.width - backW) / 2; // ← ЦЕНТРИРОВАНИЕ КАК В MyPanel
-
-        int keySize = 5;
-        int borderLeft = roomX;                      // ← ЛЕВАЯ ГРАНИЦА = позиция комнаты
-        int borderLeftPlus = borderLeft + keySize;   // x = roomX + 5
-        int borderUp = border - 10;                  // y = 90 (верх комнаты)
-        int borderDown = border - 10 + backH - keySize - 95; // y = нижняя граница с учетом offset
-        int borderDownPlus = borderDown + keySize;   // y = borderDown + 5
-
-        int[][][] walls = {{{borderLeft, borderLeftPlus}, {borderLeftPlus, borderDown}},
-            {{borderLeftPlus, borderDown}, {borderLeft, borderLeftPlus}}, 
-            {{borderDown, borderDownPlus }, {borderLeftPlus, borderDown}}, 
-            {{borderLeftPlus, borderDown}, {borderDown, borderDownPlus }}}; // когда размеры фрема поменяются это надо будет изменить
+        double[][][] walls = {{{borderLeft, borderLeftInner}, {borderUp, borderDown}},
+            {{borderLeft, borderRight}, {borderUp, borderUpInner}}, 
+            {{borderRight, borderRightInner },  {borderUp, borderDown}}, 
+            {{borderLeft, borderRight}, {borderDown, borderDownInner }}}; // когда размеры фрема поменяются это надо будет изменить
         boolean isSpaceAvailable = false;
-        boolean noDoorsAround = true;
-        int[] keyPosiiton = new int[2];
-        int xMin, xMax, yMin, yMax;
+        double[] keyPosiiton = new double[2];
+        double xMin, xMax, yMin, yMax;
 
         while (!isSpaceAvailable) {
+            isSpaceAvailable = true;
             // выберет стену
             int wallNumber = (int) (Math.random() * 4);
 
@@ -116,18 +103,15 @@ public class RoomData { // сюда надо будет засунуть и су
             yMax = walls[wallNumber][1][1];
 
             // рандомная координата на стене
-            keyPosiiton[0] = rnd(xMin, xMax);
-            keyPosiiton[1] = rnd(yMin, yMax);
+            keyPosiiton[0] = rnd(Math.min(xMin, xMax), Math.max(xMax, xMin));
+            keyPosiiton[1] = rnd(Math.min(yMin, yMax), Math.max(yMax, yMin));
 
             // провека есть ли в этой зоне дверь
             for (Door door: doors) {
                 if (door.isObjectNear(keyPosiiton[0], keyPosiiton[1])) {
-                    noDoorsAround = false;
+                    isSpaceAvailable = false;
+                    break;
                 }
-            }
-
-            if (noDoorsAround) {
-                isSpaceAvailable = true;
             }
         }
 
@@ -135,8 +119,7 @@ public class RoomData { // сюда надо будет засунуть и су
     }
 
     // рандомное число в пределах минимального максимального числа
-    private static int rnd(int min, int max) {
-        max -= min;
-        return ((int) (Math.random() * ++max) + min);
+    private static double rnd(double min, double max) {
+        return (Math.random() * (max - min) + min);
     }
 }
