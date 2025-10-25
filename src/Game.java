@@ -132,7 +132,7 @@ class Game implements ActionListener, Sizes {
                 JButton button2 = arrayList.get(i * 3 + j);; // Creates button.
                 
                 button2.setBounds((int) ((BUTTON_BORDER + j * BUTTON_SIZE) * WHOLE_SCREEN_W),
-                     (int) (buttonBordeUp * WHOLE_SCREEN_H + (i * BUTTON_SIZE) * WHOLE_SCREEN_W), 
+                     (int) (BUTTON_BORDER_UP * WHOLE_SCREEN_H + (i * BUTTON_SIZE) * WHOLE_SCREEN_W), 
                      (int) (BUTTON_SIZE * WHOLE_SCREEN_W),
                      (int) (BUTTON_SIZE * WHOLE_SCREEN_W));
                 button2.setVerticalTextPosition(SwingConstants.TOP);
