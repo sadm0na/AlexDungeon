@@ -1,62 +1,49 @@
-### TODO
-- мелкие проблемы (
-    - заменить алерты на боксы с сообщениями (моня)
-    + заменить все размеры на относительные (ян) + комната прям СОВСЕМ по центру
-    - в последний сундук картинку с лектором и надпись you won (ян)
-    - спрайты алекс (моня)
-    - уровни сложности проверить (оба)
-    + поправить картинки в мини-игре под маштаб - сделать в конструкторе скале (ян)
-    - подкорректить чтобы комнаты были чуть-чуть разными (можно флаги повесить и т.п.) (ян)
-    + в мини игре сделать другой шрифт (ян)
-    - в мини игре поменять бэкгроунд картинок и сделать потемнее бэкграунд всего (моня)
-    + в мини игре сделать разные картиночки оружия и монстров (ян)
-    )
-- код подредачить (красивый кодстайле + комменты + работа с классами) (каждый свой)
-- ридми (вместе в четверг подумаем)
-- бэклог (тоже вместе)
-- и гит сабмитнуть 
+# AlexDungeon
 
-- Красивые спрайты/анимация/фон (Ян-моня)
-- Можно ли подогнать мини-игру и данжн в одно окно? (Ян)
-- Текстовые предупреждения, инструкции к игре (моня)
-    ? найти способ сделать все надписи красивыми...
+A hybrid adventure game combining room exploration with card-based combat.
 
-- Говнокод в обработке перехода между комнатами. Подумать стоит ли менять структуру ключа немного. Либо как упростить логику по человечески. (Моня)
+## Requirements
+- Java 8 or higher
+- No external libraries needed
 
-> Пройтись по всему что изначально планировали. Почистить код.
+## How to Run
+1. Clone the repository
+2. Navigate to the project directory
+3. Compile: `javac src/*.java`
+4. Run: `java src/Dungeon`
 
----
+## Game Structure
+- **Exploration**: Move through rooms collecting keys and opening chests
+- **Card Combat**: Defeat monsters in card mini-games to progress
 
-Структура 3х столпов данжеона (также есть класс Door.java и RoomData.java)
+## Controls
+- **Movement**: W, A, S, D
+- **Sprint**: Hold SHIFT while moving
+- **Interact**: 
+  - Take key: F
+  - Open chest: K  
+  - Enter door: E
 
-Dungeon.java (главный класс)
-    - main() - точка входа
-    - start() - игровой цикл while
-    -  rooms[] - массив всех комнат
-    - changeRoom() - смена комнат
-    + содержит MyPanel и JFrame
+## Features to Test
 
-MyPanel.java (визуализация)
-    -  paintComponent() - рисует комнату
-    -  dispatchKeyEvent() - обрабатывает клавиши
-    - updateWorldPhysics() - меняет координаты (физика игры)
+### Exploration
+- Character movement with WASD
+- Sprint functionality (SHIFT)
+- Key collection (F key)
+- Chest opening (K key)
+- Door access with required keys (E key)
+- Proper key generation and placement
 
-Alex.java (персонаж)
-    - бегалка алекса
+### Card Game
+- Random card generation (monsters, potions, swords)
+- Adjacent card movement (up, down, left, right)
+- Combat mechanics (HP comparison)
+- Loot collection from defeated monsters
+- Font display (may fall back to system default)
 
+### Progression
+- Room transition after winning card games
+- Game completion upon reaching treasure room
 
-----
-
-Dungeon.java, как работает главный цикл
-
-       while(true) ────┐
-            |          │
-        repaint() ─────┼ MyPanel.paintComponent()
-            |          │       └─ рисует бэкграунд текущей комнаты
-            |          │       └─ рисует алекса
-            |          |       └─ на данный момент рисует как дебаг его координаты сверху и красные двери
-            |          │
-    updateWorldPhysics()─── alex.update() (движение)
-            |          │       └─ checkRoomTransition() (если E нажата)
-            |          │             └─ dungeon.changeRoom()
-        sleep(20) ─────┘                   └─ loadCurrentRoom() (новый фон! а вместе с этим и сундуки с ключами)
+## Game Objective
+Navigate through all rooms, win card battles against monsters, and reach the treasure room to complete the game.
