@@ -53,9 +53,9 @@ public interface Sizes {
     double keyWidth = keySize;
     double keyHeight = keyWidth * 1.5;
 
-    double chestSize[] = {0.06, 0.03472, 0.03472, 0.0694};
+    double chestSize[] = {0.06, 0.06472, 0.06472, 0.0694};
     double chestHeight[] = chestSize;
-    double chestWeight[] = {chestSize[0] * 0.75, chestSize[1] * 1.9, chestSize[2] * 1.9, chestSize[3] * 1.6};
+    double chestWeight[] = {chestSize[0] * 0.75, chestSize[1] * 0.6, chestSize[2] * 0.6, chestSize[3] * 0.75};
 
     double alexSize = 0.0625;
     double alexWeigth = alexSize;
@@ -77,7 +77,7 @@ public interface Sizes {
     double buttonSize = 0.17;
 
     double buttonBorder = 1.0 / 2.0 - buttonSize - (buttonSize) / 2.0 ;
-     double buttonBordeUp = 0.0666;
+    double buttonBordeUp = 0.0666;
 
 
 }

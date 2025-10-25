@@ -237,7 +237,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
                     }
                     break;
                 case KeyEvent.VK_SHIFT:
-                    alex.RunningSpeed = 0.00030;
+                    alex.setRunningSpeed(0.00030);
                     break;
             }
         }
@@ -259,7 +259,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
                     eKeyPressed = false;
                     break;
                 case KeyEvent.VK_SHIFT:
-                    alex.RunningSpeed = 0.00010;
+                    alex.setRunningSpeed(0.00015);
                     break;
             }
         }

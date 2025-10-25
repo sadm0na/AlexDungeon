@@ -1,43 +1,36 @@
 package src;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
-import java.awt.image.BufferedImage;
-
-
-import javax.swing.*;
-import javax.imageio.ImageIO;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 
 public class Alex implements Sizes {
     private ImageIcon alexImage;
     private double x;
     private double y;
-    double RunningSpeed;
+    private double runningSpeed;
     private int xRunningDirection;
     private int yRunningDirection;
     
     public Alex(double x, double y) throws IOException {
         this.x = x;
         this.y = y;
-        this.RunningSpeed = 0.00015;
+        this.runningSpeed = 0.00015;
         this.xRunningDirection = 0;
         this.yRunningDirection = 0;
-        
-        alexImage = new ImageIcon(ImageIO.read(new File(PathFinder.findFile("misc/Alex/Alex2.png")))); // это немного поменяется когда анимацию сделаю. хотя вроде бы можно в джаве прям написать так чтобы фотка зеркалилась
+    
+        alexImage = new ImageIcon(ImageIO.read(new File(PathFinder.findFile(
+            "misc/Alex/Alex2.png"))));
         
     }
     
     public void draw(Graphics g) {
-        
         Image ai = alexImage.getImage();
-        ai = ai.getScaledInstance((int) (alexWeigth * wholeScreenW), (int) (alexHeight * wholeScreenH),Image.SCALE_DEFAULT);
-        g.drawImage(ai, (int) ( x * wholeScreenW) , (int) (y * wholeScreenH), null);
+        ai = ai.getScaledInstance((int) (alexWeigth * wholeScreenW), 
+            (int) (alexHeight * wholeScreenH), Image.SCALE_DEFAULT);
+        g.drawImage(ai, (int) (x * wholeScreenW), (int) (y * wholeScreenH), null);
     }
     
     public void runUp() {
@@ -68,8 +61,8 @@ public class Alex implements Sizes {
         double newX = x;
         double newY = y;
         
-        newX += timeDifference * RunningSpeed * xRunningDirection;
-        newY += timeDifference * RunningSpeed * yRunningDirection;
+        newX += timeDifference * runningSpeed * xRunningDirection;
+        newY += timeDifference * runningSpeed * yRunningDirection;
  
 
         if (newX >= borderLeftInner && newX <= borderRightInner - alexWeigth) {
@@ -98,5 +91,9 @@ public class Alex implements Sizes {
         this.y = y;
         stopRunningX();
         stopRunningY();
+    }
+
+    public void setRunningSpeed(double runningSpeed) {
+        this.runningSpeed = runningSpeed;
     }
 }
