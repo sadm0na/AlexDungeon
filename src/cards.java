@@ -4,15 +4,19 @@ import java.awt.*;
 import java.util.*;
 
 /**
+ * All other cards inherit from Cards.
+ * Has hp, money, sword, image and string for every card.
+ * Can create a random card, has two methods that overades later:
+ * changeAlex that changes the main character and renewString.
  * 
  */
 
 class Cards implements Sizes{
-    private int hp; // health
-    private int money; 
-    private int sword; // strength of the sword
+    private int hp; // Health of the character in the card.
+    private int money; // The amount of coins.
+    private int sword; // Strength of the sword.
     private Image image;
-    private String string;
+    private String string; // Is displayed in the button as well as an image.
 
     public int getHp() {
         return hp;
@@ -56,7 +60,7 @@ class Cards implements Sizes{
 
     /**
      * Returns a random card.
-     **/
+     */
     Cards randomCards(int level, int strengthPlus) {
         Random random = new Random();
         int r = random.nextInt(1, 4);
@@ -73,15 +77,17 @@ class Cards implements Sizes{
     /**
      * For overloading later.
      * Applyes changes to Alex.
+     * Returns a boolean variable of the stage of Alex after this applying them.
+     * If true - alex hp is <= 0, so he is dead. Otherwise returns 1.
      */
     boolean changeAlex(Cards alex) {
-        return false; // its ok. if true - game stops
+        return false;
     }
 
     /**
      * For overloading later. 
      * Renews a string when it changes.
-     **/
+     */
     void renewString() {
         string = "";
     }

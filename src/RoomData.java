@@ -1,11 +1,7 @@
 package src;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
 
 public class RoomData implements Sizes{ // сюда надо будет засунуть и сундуки и ключики
     private String backgroundPath;
@@ -21,8 +17,8 @@ public class RoomData implements Sizes{ // сюда надо будет засу
     public RoomData(String backgroundPath, String miniMapPath) {
         this.backgroundPath = backgroundPath;
         this.miniMapPath = miniMapPath;
-        this.playerStartX = alexStartX;
-        this.playerStartY = alexStartY;
+        this.playerStartX = ALEX_START_X;
+        this.playerStartY = ALEX_START_Y;
         this.doors = new ArrayList<>();
         this.chests = new ArrayList<>();
         this.visited = false;
@@ -82,10 +78,10 @@ public class RoomData implements Sizes{ // сюда надо будет засу
         double[] d = {0.1, 0.2};
         //return d;
         
-        double[][][] walls = {{{borderLeft, borderLeftInner}, {borderUp, borderDown}},
-            {{borderLeft, borderRight}, {borderUp, borderUpInner}}, 
-            {{borderRight, borderRightInner },  {borderUp, borderDown}}, 
-            {{borderLeft, borderRight}, {borderDown, borderDownInner }}}; // когда размеры фрема поменяются это надо будет изменить
+        double[][][] walls = {{{BORDER_LEFT, BORDER_LEFT_INNER}, {BORDER_UP, BORDER_DOWN}},
+            {{BORDER_LEFT, BORDER_REIGHT}, {BORDER_UP, BORDER_UP_INNER}}, 
+            {{BORDER_REIGHT, BORDER_REIGHT_INNER },  {BORDER_UP, BORDER_DOWN}}, 
+            {{BORDER_LEFT, BORDER_REIGHT}, {BORDER_DOWN, BORDER_DOWN_INNER }}}; // когда размеры фрема поменяются это надо будет изменить
         boolean isSpaceAvailable = false;
         double[] keyPosiiton = new double[2];
         double xMin, xMax, yMin, yMax;

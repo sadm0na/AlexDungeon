@@ -1,83 +1,82 @@
 package src;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.*;
-import javax.imageio.ImageIO;
 
 import java.awt.*;
 
-import java.util.List;
+/**
+ * Class of all sizes in the game.
+ * All sizes are from 0 to 1 and then are multiplied to the dimention of the screen.
+ */
 
 public interface Sizes {
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    double wholeScreenW = screenSize.getWidth();
-    double wholeScreenH = screenSize.getHeight() - 30; // не совсем вмещается в экран по высоте из-за этой зелёной штуки с верху - не точно величена экрана
-
-    double border =  0.15; // border of the inner room
-    double innerBorder = 0.08;
-    double backW = 1 - border * 2; // with of the room
-    double backH = 1 - border * 2; // height og the room
-
-    double miniMapSize = 0.18;
-    double miniMapW = miniMapSize * 1.2; 
-    double miniMapH = miniMapSize;  
-        
-    double miniMapX = 1 - miniMapW;
-    double miniMapY = 1 - miniMapH; 
+    final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
     
-    double doorSize = 0.05;
-    double doorWidth = doorSize;
-    double doorHeight = doorSize * 2.3;
+    final double WHOLE_SCREEN_W = SCREEN_SIZE.getWidth();
+    final double WHOLE_SCREEN_H = SCREEN_SIZE.getHeight() - 30; 
 
-    double borderLeft = border;  
-    double borderLeftInner = borderLeft + innerBorder;              
-    double borderRight = border + backW;
-    double borderRightInner = borderRight - innerBorder;
-    double borderUp = border;
-    double borderUpInner = border + innerBorder;
-    double borderDown = border + backH;    
-    double borderDownInner = borderDown - innerBorder; 
+    final double BORDER =  0.15; // Border of the inner room.
+    final double INNER_BORDER = 0.08;
+    final double BACK_WIDTH = 1 - BORDER * 2; // Width of the room.
+    final double BACK_HEIGHT = 1 - BORDER * 2; // Height of the room.
 
-    double centerHorizontal = border + backW / 2;
-    double centerVertical = border + backH / 2;
+    final double MINI_MAP_SIZE = 0.18;
+    final double MINI_MAP_WIDTH = MINI_MAP_SIZE * 1.2; 
+    final double MINI_MAP_HEIGHT = MINI_MAP_SIZE;  
         
-    double oneThirdHorizontal = border + backW / 3;
-    double secondThirdHorizontal = border + 2 * backW / 3;
-    double oneThirdVertical = border + backH / 3;
-    double secondThirdVertical = border+ 2 * backH / 3 ;
+    final double MINI_MAP_X = 1 - MINI_MAP_WIDTH; // Location of the mini map in the frame.
+    final double MINI_MAP_Y = 1 - MINI_MAP_HEIGHT; 
+    
+    final double DOOR_SIZE = 0.05;
+    final double DOOR_WIDTH = DOOR_SIZE;
+    final double DOOR_HEIGHT = DOOR_SIZE * 2.3;
 
-    double keySize = 0.02;
-    double keyWidth = keySize;
-    double keyHeight = keyWidth * 1.5;
+    final double BORDER_LEFT = BORDER;  
+    final double BORDER_LEFT_INNER = BORDER_LEFT 
+        + INNER_BORDER; // Inside the room without walls.           
+    final double BORDER_REIGHT = BORDER + BACK_WIDTH;
+    final double BORDER_REIGHT_INNER = BORDER_REIGHT - INNER_BORDER;
+    final double BORDER_UP = BORDER;
+    final double BORDER_UP_INNER = BORDER + INNER_BORDER;
+    final double BORDER_DOWN = BORDER + BACK_HEIGHT;    
+    final double BORDER_DOWN_INNER = BORDER_DOWN - INNER_BORDER; 
 
-    double chestSize[] = {0.06, 0.06472, 0.06472, 0.0694};
-    double chestHeight[] = chestSize;
-    double chestWeight[] = {chestSize[0] * 0.75, chestSize[1] * 0.6, chestSize[2] * 0.6, chestSize[3] * 0.75};
+    final double CENTER_HORIZONTAL = BORDER + BACK_WIDTH / 2;
+    final double CENTER_VERTICAL = BORDER + BACK_HEIGHT / 2;
+        
+    final double ONE_THIRD_HORIZONTAL = BORDER + BACK_WIDTH / 3;
+    final double SECOND_THIRD_HORIZONTAL = BORDER + 2 * BACK_WIDTH / 3;
+    final double ONE_THIRD_VERTICAL = BORDER + BACK_HEIGHT / 3;
+    final double SECOND_THIRD_VERTICAL = BORDER + 2 * BACK_HEIGHT / 3;
 
-    double alexSize = 0.0625;
-    double alexWeigth = alexSize;
-    double alexHeight = alexWeigth * 2;
+    final double KEY_SIZE = 0.02;
+    final double KEY_WIDTH = KEY_SIZE;
+    final double KEY_HEIGHT = KEY_WIDTH * 1.5;
 
-    double doorNearArea = 0.1;
-    double keyNearArea = innerBorder + alexWeigth / 2 + 0.1;
-    double chestNearArea = 0.04472;
+    final double CHEST_SIZE[] = {0.06, 0.06472, 0.06472, 0.0694};
+    final double CHEST_HEIGHT[] = CHEST_SIZE;
+    final double CHEST_WIDTH[] = {CHEST_SIZE[0] * 0.75, CHEST_SIZE[1] 
+        * 0.6, CHEST_SIZE[2] * 0.6, CHEST_SIZE[3] * 0.75};
 
-    double alexStartX = border + innerBorder + alexWeigth;
-    double alexStartY = border + innerBorder + alexHeight ;
+    final double ALEX_SIZE = 0.0625;
+    final double ALEX_WIDTH = ALEX_SIZE;
+    final double ALEX_HEIGHT = ALEX_WIDTH * 2;
 
-    double dialogPlusX = 0.03;
+    final double DOOR_NEAR_AREA = 0.1;
+    final double KEY_NEAR_AREA = INNER_BORDER + ALEX_WIDTH / 2 + 0.1;
+    final double CHEST_NEAR_AREA = 0.04472;
 
-    double cardSize = 0.14;
-    double cardWeight = cardSize;
-    double cardHeight = cardWeight * 1.8;
+    final double ALEX_START_X = BORDER + INNER_BORDER + ALEX_WIDTH;
+    final double ALEX_START_Y = BORDER + INNER_BORDER + ALEX_HEIGHT;
 
-    double buttonSize = 0.17;
+    final double DIALOG_PLUS_X = 0.03;
 
-    double buttonBorder = 1.0 / 2.0 - buttonSize - (buttonSize) / 2.0 ;
-    double buttonBordeUp = 0.0666;
+    final double CARD_SIZE = 0.14;
+    final double CARD_WIDTH = CARD_SIZE;
+    final double CARD_HEIGHT = CARD_WIDTH * 1.8;
+
+    final double BUTTON_SIZE = 0.17;
+
+    final double BUTTON_BORDER = 1.0 / 2.0 - BUTTON_SIZE - (BUTTON_SIZE) / 2.0 ;
+    final double BUTTON_BORDER_UP = 0.0666;
 
 
 }

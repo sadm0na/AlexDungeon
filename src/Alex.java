@@ -28,9 +28,9 @@ public class Alex implements Sizes {
     
     public void draw(Graphics g) {
         Image ai = alexImage.getImage();
-        ai = ai.getScaledInstance((int) (alexWeigth * wholeScreenW), 
-            (int) (alexHeight * wholeScreenH), Image.SCALE_DEFAULT);
-        g.drawImage(ai, (int) (x * wholeScreenW), (int) (y * wholeScreenH), null);
+        ai = ai.getScaledInstance((int) (ALEX_WIDTH* WHOLE_SCREEN_W), 
+            (int) (ALEX_HEIGHT * WHOLE_SCREEN_H), Image.SCALE_DEFAULT);
+        g.drawImage(ai, (int) (x * WHOLE_SCREEN_W), (int) (y * WHOLE_SCREEN_H), null);
     }
     
     public void runUp() {
@@ -65,13 +65,13 @@ public class Alex implements Sizes {
         newY += timeDifference * runningSpeed * yRunningDirection;
  
 
-        if (newX >= borderLeftInner && newX <= borderRightInner - alexWeigth) {
+        if (newX >= BORDER_LEFT_INNER && newX <= BORDER_REIGHT_INNER - ALEX_WIDTH) {
             x = newX;
         } else {
             stopRunningX();
         }
         
-        if (newY >= borderUpInner && newY <= borderDownInner - alexHeight) {
+        if (newY >= BORDER_UP_INNER && newY <= BORDER_DOWN_INNER - ALEX_HEIGHT) {
             y = newY;
         } else {
             stopRunningY();

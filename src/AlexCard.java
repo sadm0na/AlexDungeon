@@ -4,7 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * Card mith the main character.
+ * Card mith the main character, inherits from Cards.
+ * Has a constructer with setting the image, money, sword and hp.
  * 
  */
 
@@ -13,14 +14,11 @@ class AlexCard extends Cards {
     public AlexCard(int hp) {
         ImageIcon imageIcon = new ImageIcon(PathFinder.findFile("misc/CardsGame/alexW.png"));
         this.setImage(imageIcon.getImage());
-        this.setImage(this.getImage().getScaledInstance((int) (cardWeight * wholeScreenW),
-             (int) (cardHeight * wholeScreenH), Image.SCALE_DEFAULT));
+        this.setImage(this.getImage().getScaledInstance((int) (CARD_WIDTH * WHOLE_SCREEN_W),
+             (int) (CARD_HEIGHT * WHOLE_SCREEN_H), Image.SCALE_DEFAULT));
         this.setMoney(0);
-        //money = 0;
-        this.setHp(hp);
-        //this.hp = hp;
+        this.setHp(hp); // The maximal hp can be changed during the dungeon.
         this.setSword(0);
-        //sword = 0;
         this.setString("HP: " + this.getHp() + "      $: " + this.getMoney()
             + "        ATK: " + this.getSword());
         

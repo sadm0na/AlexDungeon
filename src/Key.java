@@ -1,16 +1,13 @@
 package src;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-
-import javax.imageio.ImageIO;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
+
+/**
+ * Creates a key for the room in dungeon.
+ * Can check if player is near and if it is collected.
+ * 
+ */
 
 public class Key implements Sizes{
     private double x;
@@ -18,19 +15,23 @@ public class Key implements Sizes{
     private boolean isCollected;
     Image image;
 
-
+    
     public Key(double x, double y) {
         this.x = x;
         this.y = y;
         this.isCollected = false;
         ImageIcon img = new ImageIcon(PathFinder.findFile("misc/Keys/key.png"));
         image = img.getImage();
-        image = image.getScaledInstance((int) (keyWidth * wholeScreenW),
-             (int) (keyHeight * wholeScreenH), Image.SCALE_DEFAULT);
+        image = image.getScaledInstance((int) (KEY_WIDTH * WHOLE_SCREEN_W),
+             (int) (KEY_HEIGHT * WHOLE_SCREEN_H), Image.SCALE_DEFAULT);
     }
 
-    public boolean isPlayerNear(double playerX, double playerY) { // проверяю попадает ли в окружность ключа..?
-        return Math.pow(x - (playerX + alexWeigth / 2), 2) + Math.pow(y - (playerY + alexHeight / 2), 2) < Math.pow(keyNearArea, 2);
+    /**
+     * Checks if player is near.
+     */
+    public boolean isPlayerNear(double playerX, double playerY) { 
+        return Math.pow(x - (playerX + ALEX_WIDTH / 2), 2) 
+            + Math.pow(y - (playerY + ALEX_HEIGHT / 2), 2) < Math.pow(KEY_NEAR_AREA, 2);
     }
 
     public double getX() {

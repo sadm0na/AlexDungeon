@@ -1,22 +1,23 @@
 package src;
 
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 
-public class Messages {
+/**
+ * 
+ */
+
+public class Messages implements Sizes {
 
     public static void drawSpeechBubble(Graphics g, String message, int x, int y) {
         Graphics2D g2d = (Graphics2D) g;
         
-        // оригинальные настройки
-        Color originalColor = g2d.getColor();
-        Font originalFont = g2d.getFont();
+        Color originalColor = g2d.getColor(); // Original settings.
+        Font originalFont = g2d.getFont(); // Original settings.
         
-        // шрифт красивый
         Font pixelFont = new Font("Monospaced", Font.BOLD, 12);
         g2d.setFont(pixelFont);
         
-        FontMetrics fm = g2d.getFontMetrics(); // какая то невероятная штука со стэковерфлоу для рассчета длины текста
+        FontMetrics fm = g2d.getFontMetrics(); // Calculating text length.
         int textWidth = fm.stringWidth(message);
         int textHeight = fm.getHeight();
         

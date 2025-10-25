@@ -1,15 +1,16 @@
 package src;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+/**
+ * Is used to change coordinates (x,y) in matrix to one coordinate in one-simention array.
+ * Only used in mini-game.
+ * 
+ */
 
-class Coordinants {
+class Coordinates {
     private int x;
     private int y;
 
-    public Coordinants(int x, int y) {
+    public Coordinates(int x, int y) {
         this.x = x;
         this.y = y;
     }
