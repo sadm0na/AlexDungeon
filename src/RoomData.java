@@ -37,8 +37,8 @@ public class RoomData implements Sizes{ // сюда надо будет засу
         this.key = new Key(position[0], position[1]);
     }
     
-    public void addChest(double X, double Y, int type, int h) {
-        chests.add(new Chest(X, Y, type, h));
+    public void addChest(double X, double Y, int type, int h, MyPanel panel) {
+        chests.add(new Chest(X, Y, type, h, panel));
     }
 
     public String getBackgroundPath() {

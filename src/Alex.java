@@ -25,7 +25,7 @@ public class Alex implements Sizes {
     public Alex(double x, double y) throws IOException {
         this.x = x;
         this.y = y;
-        this.RunningSpeed = 0.00010;
+        this.RunningSpeed = 0.00015;
         this.xRunningDirection = 0;
         this.yRunningDirection = 0;
         

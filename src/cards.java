@@ -43,7 +43,7 @@ class Cards implements Sizes{
     }
 
     boolean changeAlex(Cards alex) {
-        return false; // its ok. if true - game stop
+        return false; // its ok. if true - game stops
     }
 
     void renewString() {
@@ -61,13 +61,13 @@ class AlexCards extends Cards {
         money = 0;
         this.hp = hp;
         sword = 0;
-        string = "hp: " + hp + "        $: " + money + "          sword strength: " + sword;
+        string = "HP: " + hp + "      $: " + money + "        ATK: " + sword;
         
     }
 
     @Override
     void renewString() {
-        string = "hp: " + hp + "        $: " + money + "          sword strength: " + sword;
+        string = "HP: " + hp + "      $: " + money + "        ATK: " + sword;
     }
 
     
@@ -96,7 +96,7 @@ class monster extends Cards {
         Random random = new Random();
         hp = random.nextInt(5) + level * 4;
         money = random.nextInt(5) + level * 2;
-        string = "hp: " + hp + "             reward for killing: " + money + "$";
+        string = "HP: " + hp + "          LOOT: " + money + "$";
     }
     
     @Override
@@ -124,7 +124,7 @@ class monster extends Cards {
 
     @Override
     void renewString() {
-        string = "hp: " + hp + "             reward for killing: " + money + "$";
+        string = "HP: " + hp + "          LOOT: " + money + "$";
     }
 }
 
@@ -137,7 +137,7 @@ class poison extends Cards {
              (int) (cardHeight * wholeScreenH), Image.SCALE_DEFAULT);
         Random random = new Random();
         hp = random.nextInt(5) + 2;
-        string = "+" + hp + " to hp";
+        string = "+" + hp + " to HP";
     }
 
     @Override
@@ -157,7 +157,7 @@ class sword extends Cards {
              (int) (cardHeight * wholeScreenH), Image.SCALE_DEFAULT);
         Random random = new Random();
         sword = random.nextInt(5) + 2 + strengthPlus;
-        string = "Sword strength: " + sword;
+        string = "ATK: " + sword;
         
     }
 
@@ -218,6 +218,7 @@ class Game implements ActionListener, Sizes {
             arrayListCards.get(alexCoor.x * 3 + alexCoor.y).hp = Math.min( arrayListCards.get(alexCoor.x * 3 + alexCoor.y).hp, maxHp);
             arrayListCards.get(alexCoor.x * 3 + alexCoor.y).renewString();
             button = arrayList.get(x * 3 + y);
+            
             button.setIcon(new ImageIcon(arrayListCards.get(x * 3 + y).image));
             button.setText(arrayListCards.get(x * 3 + y).string);
 
@@ -299,18 +300,19 @@ class Game implements ActionListener, Sizes {
                 arrayList.add(new JButton(arrayListCards.get(i * 3 + j).getString(),
                      new ImageIcon(arrayListCards.get(i * 3 + j).getImageIcon())));
                 JButton button2 = arrayList.get(i * 3 + j);; // creates button
-
-
+                
                 button2.setBounds((int) ((buttonBorder + j * buttonSize) * wholeScreenW),
-                     (int) (buttonBordeUp * wholeScreenH + (i * buttonSize) * wholeScreenW), (int) (buttonSize * wholeScreenW),
+                     (int) (buttonBordeUp * wholeScreenH + (i * buttonSize) * wholeScreenW), 
+                     (int) (buttonSize * wholeScreenW),
                      (int) (buttonSize * wholeScreenW));
                 button2.setVerticalTextPosition(SwingConstants.TOP);
                 button2.setHorizontalTextPosition(SwingConstants.CENTER);
                 button2.addActionListener(this);
 
-                
-                button2.setFont(new Font("Algerian", Font.PLAIN, 12));
+                button2.setFont(new Font("Monospace", Font.PLAIN, 12));
                 button2.setForeground(new Color(255, 128, 64));
+
+                button2.setFocusPainted(false); // чтобы не было тонкой линии на активной кнопке
 
                 // надо сделать кнопку непрозрачной но с прозрачным фоном
                 button2.setOpaque(false); // делаем прозрачной
@@ -330,8 +332,8 @@ class Game implements ActionListener, Sizes {
         }
 
         Color backgrounfColor = new Color(214, 138, 242); // creates helper object:
-        JLabel textArea = new JLabel("You need " + levelMoney + " coins to win.");
-        textArea.setFont(new Font("Algerian", Font.BOLD, 22));
+        JLabel textArea = new JLabel("Collect " + levelMoney + " coins to win, warrior...");
+        textArea.setFont(new Font("Monospace", Font.BOLD, 22));
         textArea.setForeground(backgrounfColor);
         textArea.setBounds((int) (buttonBorder * wholeScreenW),5,700,40);
         frame.add(textArea);
