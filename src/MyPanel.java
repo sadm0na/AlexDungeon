@@ -201,12 +201,19 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
      */
     public void showMessages(Graphics g) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int mode = 0; // 0 - top, 1 - bottom, 2 - special for winning game
         
         if (chestMessage != null) {
-            Messages.showMessage(g, chestMessage, screenSize.width, screenSize.height, 1); // bottom message
+            if (chestMessage.equals("You have won the game!")) {
+                mode = 2;
+            } else {
+                mode = 1;
+            }
+            Messages.showMessage(g, chestMessage, screenSize.width, screenSize.height, mode); // bottom message
         }
         if (warningMessage != null) {
-            Messages.showMessage(g, warningMessage, screenSize.width, screenSize.height, 0); // top message
+            mode = 0;
+            Messages.showMessage(g, warningMessage, screenSize.width, screenSize.height, mode); // top message
         }
     }
 

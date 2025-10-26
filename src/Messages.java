@@ -70,8 +70,10 @@ public class Messages implements Sizes {
         int y;
         if (mode == 0) {
             y = 70; // Top position
-        } else {
+        } else if (mode == 1) {
             y = screenHeight - 80; // Bottom position
+        } else {
+            y = screenHeight / 2;
         }
         
         // Message background
@@ -81,9 +83,11 @@ public class Messages implements Sizes {
         // Border color depends on mode
         g2d.setStroke(new BasicStroke(3));
         if (mode == 0) {
-            g2d.setColor(new Color(239, 225, 28, 220)); // Yellow for top
-        } else {
+            g2d.setColor(new Color(227, 63, 37, 220)); // orange for top
+        } else if (mode == 1) {
             g2d.setColor(new Color(20, 85, 87, 200)); // Blue-green for bottom
+        } else {
+            g2d.setColor(new Color(255, 197, 15)); // yellow for winning game
         }
         g2d.drawRect(x - 15, y - textHeight, textWidth + 30, textHeight + 15);
         
