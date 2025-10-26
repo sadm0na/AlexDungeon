@@ -6,6 +6,12 @@ import java.util.List;
 /**
  * Represents a room in the dungeon with doors, keys,chests 
  * and paths to background, room, minimap images.
+ * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 public class RoomData implements Sizes {
     private String backgroundPath;
@@ -16,7 +22,6 @@ public class RoomData implements Sizes {
     private List<Chest> chests;
     private boolean visited;
     private String miniMapPath;
-
     
     public RoomData(String backgroundPath, String miniMapPath) {
         this.backgroundPath = backgroundPath;
@@ -40,8 +45,8 @@ public class RoomData implements Sizes {
         this.key = new Key(position[0], position[1]);
     }
     
-    public void addChest(double X, double Y, int type, int h, MyPanel panel) {
-        chests.add(new Chest(X, Y, type, h, panel));
+    public void addChest(double x, double y, int type, int h, MyPanel panel) {
+        chests.add(new Chest(x, y, type, h, panel));
     }
 
     public String getBackgroundPath() {
@@ -86,10 +91,12 @@ public class RoomData implements Sizes {
     private double[] getRandomKeyPosition() {
         // Set wall boundaries for x and y: left, top, right, bottom walls
         double[][][] walls = {
-            {{BORDER_LEFT, BORDER_LEFT_INNER}, {BORDER_UP, BORDER_DOWN}},
-            {{BORDER_LEFT, BORDER_REIGHT}, {BORDER_UP, BORDER_UP_INNER}}, 
-            {{BORDER_REIGHT, BORDER_REIGHT_INNER}, {BORDER_UP, BORDER_DOWN}}, 
-            {{BORDER_LEFT, BORDER_REIGHT}, {BORDER_DOWN, BORDER_DOWN_INNER}}
+            {{BORDER_LEFT, BORDER_LEFT_INNER - KEY_WIDTH}, {BORDER_UP, BORDER_DOWN - KEY_HEIGHT}},
+            {{BORDER_LEFT, BORDER_REIGHT - KEY_WIDTH}, {BORDER_UP, BORDER_UP_INNER - KEY_HEIGHT}}, 
+            {{BORDER_REIGHT, BORDER_REIGHT_INNER - KEY_WIDTH}, {BORDER_UP, 
+                BORDER_DOWN - KEY_HEIGHT}}, 
+            {{BORDER_LEFT, BORDER_REIGHT - KEY_WIDTH}, {BORDER_DOWN, 
+                BORDER_DOWN_INNER - KEY_HEIGHT}}
         };
         
         boolean isSpaceAvailable = false;

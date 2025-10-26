@@ -8,6 +8,11 @@ import javax.swing.*;
  * Card mith the poson, inherits from Cards.
  * Has a constructer with setting the image and hp.
  * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 
 class PoisonCard extends Cards {

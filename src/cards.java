@@ -9,6 +9,11 @@ import java.util.*;
  * Can create a random card, has two methods that overades later:
  * changeAlex that changes the main character and renewString.
  * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 
 class Cards implements Sizes{

@@ -5,6 +5,12 @@ import java.awt.*;
 /**
  * Class of all sizes in the game.
  * All sizes are from 0 to 1 and then are multiplied to the dimention of the screen.
+ * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 
 public interface Sizes {
@@ -77,6 +83,5 @@ public interface Sizes {
 
     final double BUTTON_BORDER = 1.0 / 2.0 - BUTTON_SIZE - (BUTTON_SIZE) / 2.0 ;
     final double BUTTON_BORDER_UP = 0.0666;
-
-
+    
 }

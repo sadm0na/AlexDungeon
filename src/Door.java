@@ -7,6 +7,11 @@ import javax.swing.*;
  * Creates a door for the room in dungeon.
  * Can check if object is near.
  * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 
 public class Door implements Sizes {

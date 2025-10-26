@@ -9,6 +9,12 @@ import javax.swing.*;
  * Class of mini-game.
  * Checks if it is possible to do to the button ones it is hold.
  * Checks if game must be ended (if Alex died or has enought money to win this level).
+ * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 class Game implements ActionListener, Sizes {
     private Coordinates alexCoor; // Coordinates of Alex Card.
@@ -132,8 +138,8 @@ class Game implements ActionListener, Sizes {
                 JButton button2 = arrayList.get(i * 3 + j);; // Creates button.
                 
                 button2.setBounds((int) ((BUTTON_BORDER + j * BUTTON_SIZE) * WHOLE_SCREEN_W),
-                     (int) (BUTTON_BORDER_UP * WHOLE_SCREEN_H + (i * BUTTON_SIZE) * WHOLE_SCREEN_W), 
-                     (int) (BUTTON_SIZE * WHOLE_SCREEN_W),
+                     (int) (BUTTON_BORDER_UP * WHOLE_SCREEN_H + (i * BUTTON_SIZE) 
+                     * WHOLE_SCREEN_W), (int) (BUTTON_SIZE * WHOLE_SCREEN_W),
                      (int) (BUTTON_SIZE * WHOLE_SCREEN_W));
                 button2.setVerticalTextPosition(SwingConstants.TOP);
                 button2.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -197,12 +203,3 @@ class Game implements ActionListener, Sizes {
         return arrayListCards;
     }
 }
-
-class CardsMAin {
-    public static void main(String[] args) {
-         
-        Game game = new Game(2, 10, 2);
-        boolean b = game.gameControl();
-        System.out.println(b);
-    }
-} 

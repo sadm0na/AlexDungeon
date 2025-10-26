@@ -4,6 +4,12 @@ import java.io.File;
 
 /**
  * Finds files in different directory structures for flexible project setup.
+ * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 public class PathFinder {
     

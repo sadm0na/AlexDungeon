@@ -9,6 +9,12 @@ import javax.swing.*;
 /**
  * Represents the main character Alex in the game.
  * Handles movement, drawing, and position updates.
+ * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 public class Alex implements Sizes {
     private ImageIcon alexImage;

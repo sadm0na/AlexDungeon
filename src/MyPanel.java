@@ -1,16 +1,22 @@
 package src;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.*;
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 /**
  * Main game panel handling rendering, input, and game state updates.
+ * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
     private Image scaledRoomImage;      // Current room image
@@ -34,8 +40,8 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
     public MyPanel(Dungeon dungeon, boolean loadRoom) throws IOException {
         this.dungeon = dungeon;
 
-        this.setSize((int)WHOLE_SCREEN_W, (int)WHOLE_SCREEN_H);
-        this.setPreferredSize(new Dimension((int)WHOLE_SCREEN_W, (int)WHOLE_SCREEN_H));
+        this.setSize((int) WHOLE_SCREEN_W, (int) WHOLE_SCREEN_H);
+        this.setPreferredSize(new Dimension((int) WHOLE_SCREEN_W, (int) WHOLE_SCREEN_H));
         
         setDoubleBuffered(true);
 
@@ -57,16 +63,19 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
 
         // Load and scale room background
         BufferedImage roomBackground = ImageIO.read(new File(room.getBackgroundPath()));
-        this.scaledRoomImage = roomBackground.getScaledInstance((int) (BACK_WIDTH * WHOLE_SCREEN_W), 
-            (int) (BACK_HEIGHT * WHOLE_SCREEN_H), Image.SCALE_SMOOTH);
+        this.scaledRoomImage = roomBackground.getScaledInstance((int) 
+            (BACK_WIDTH * WHOLE_SCREEN_W), (int) (BACK_HEIGHT * WHOLE_SCREEN_H), 
+            Image.SCALE_SMOOTH);
         
         // Load background texture
-        this.backgroundTexture = ImageIO.read(new File(PathFinder.findFile("misc/Rooms/Firelights.png")));
+        this.backgroundTexture = ImageIO.read(new File(
+            PathFinder.findFile("misc/Rooms/Firelights.png")));
         
         // Load and scale mini map
         BufferedImage miniMap = ImageIO.read(new File(room.getminiMapPath()));                  
         this.scaledMiniMap = miniMap.getScaledInstance(
-            (int) (MINI_MAP_WIDTH *  WHOLE_SCREEN_W), (int) (MINI_MAP_HEIGHT * WHOLE_SCREEN_H), Image.SCALE_SMOOTH);
+            (int) (MINI_MAP_WIDTH *  WHOLE_SCREEN_W), (int) (MINI_MAP_HEIGHT * WHOLE_SCREEN_H), 
+            Image.SCALE_SMOOTH);
         
         // Initialize or reposition Alex
         if (alex == null) {
@@ -78,7 +87,8 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
     
     /**
      * Main rendering method - draws all game elements in correct order.
-     * Order: room background => room => mini map => interactive objects => Alex => hints and warnings
+     * Order: room background => room => mini map => interactive objects => Alex 
+     * => hints and warnings.
      */
     @Override
     protected void paintComponent(Graphics g) {
@@ -120,19 +130,22 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
         // Draw all doors in the room
         for (Door door : room.getDoors()) {
             if (door.image != null) {
-                g.drawImage(door.image, (int)(WHOLE_SCREEN_W * door.getX()), (int)(WHOLE_SCREEN_H * door.getY()), null);
+                g.drawImage(door.image, (int) (WHOLE_SCREEN_W * door.getX()), 
+                    (int) (WHOLE_SCREEN_H * door.getY()), null);
             }
         }
 
         // Draw key if not collected
         if (key != null && !key.isKeyCollected()) {
-            g.drawImage(key.image, (int)(WHOLE_SCREEN_W * key.getX()), (int)(WHOLE_SCREEN_H * key.getY()), null, null);
+            g.drawImage(key.image, (int) (WHOLE_SCREEN_W * key.getX()), 
+                (int) (WHOLE_SCREEN_H * key.getY()), null, null);
         }
 
         // Draw all chests in the room
         for (Chest chest : room.getChest()) {
             if (chest != null) {
-                g.drawImage(chest.getImage(), (int)(WHOLE_SCREEN_W * chest.getX()), (int)(WHOLE_SCREEN_H * chest.getY()), null, null);
+                g.drawImage(chest.getImage(), (int) (WHOLE_SCREEN_W * chest.getX()), 
+                    (int) (WHOLE_SCREEN_H * chest.getY()), null, null);
             }   
         }
     }
@@ -147,7 +160,8 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
         // Check door proximity
         for (Door door : room.getDoors()) {
             if (door.isObjectNear(alex.getX(), alex.getY())) {
-                Messages.drawSpeechBubble(g, "Press E", (int)(WHOLE_SCREEN_W * (alex.getX() + DIALOG_PLUS_X)), (int)(alex.getY() * WHOLE_SCREEN_H));
+                Messages.drawSpeechBubble(g, "Press E", (int) (WHOLE_SCREEN_W 
+                    * (alex.getX() + DIALOG_PLUS_X)), (int) (alex.getY() * WHOLE_SCREEN_H));
                 break;
             }
         }
@@ -155,13 +169,17 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
         // Check key proximity
         Key key = room.getKey();
         if (key != null && !key.isKeyCollected() && key.isPlayerNear(alex.getX(), alex.getY())) {
-            Messages.drawSpeechBubble(g, "Press F", (int)(WHOLE_SCREEN_W * (alex.getX() + DIALOG_PLUS_X)), (int)(alex.getY() * WHOLE_SCREEN_H));
+            Messages.drawSpeechBubble(g, "Press F", (int) (WHOLE_SCREEN_W 
+                * (alex.getX() + DIALOG_PLUS_X)), (int) (alex.getY() * WHOLE_SCREEN_H));
         }
 
         // Check chest proximity
         for (Chest chest : room.getChest()) {
-            if (chest != null && !chest.isChestCollected() &&  chest.isPlayerNear(alex.getX(), alex.getY())) {
-                Messages.drawSpeechBubble(g, "Press K to open the chest", (int)(WHOLE_SCREEN_W * (alex.getX() + DIALOG_PLUS_X)), (int)(alex.getY() * WHOLE_SCREEN_H));
+            if (chest != null && !chest.isChestCollected() 
+                && chest.isPlayerNear(alex.getX(), alex.getY())) {
+                Messages.drawSpeechBubble(g, "Press K to open the chest", (int) 
+                    (WHOLE_SCREEN_W * (alex.getX() + DIALOG_PLUS_X)), (int) (alex.getY() 
+                    * WHOLE_SCREEN_H));
             }
         }
     }
@@ -209,11 +227,13 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
             } else {
                 mode = 1;
             }
-            Messages.showMessage(g, chestMessage, screenSize.width, screenSize.height, mode); // bottom message
+            Messages.showMessage(g, chestMessage, screenSize.width, 
+                screenSize.height, mode); // bottom message
         }
         if (warningMessage != null) {
             mode = 0;
-            Messages.showMessage(g, warningMessage, screenSize.width, screenSize.height, mode); // top message
+            Messages.showMessage(g, warningMessage, screenSize.width, 
+                screenSize.height, mode); // top message
         }
     }
 
@@ -267,6 +287,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
                 case KeyEvent.VK_SHIFT:
                     alex.setRunningSpeed(0.00030); // speed changes when shift is pressed
                     break;
+                default:
             }
         }
         
@@ -290,6 +311,7 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
                 case KeyEvent.VK_SHIFT:
                     alex.setRunningSpeed(0.00015);
                     break;
+                default:
             }
         }
         
@@ -325,14 +347,17 @@ public class MyPanel extends JPanel implements KeyEventDispatcher, Sizes {
             if (door.isObjectNear(alex.getX(), alex.getY())) {
                 int nextRoomId = door.getTargetRoomId();
 
-                // Validate room transition conditions. If they're not met, warning message will be set.
+                // Validate room transition conditions. 
+                //If they're not met, warning message will be set.
                 if (nextRoomId == 5 && !dungeon.isTreasuryAvailable()) {
                     setWarningMessage("Kill the boss to unlock treasury!");
                     return;
-                } else if ((nextRoomId == 4 && roomId == 0) && !dungeon.getSpecificRoom(nextRoomId).getKey().isKeyCollected()) {
+                } else if ((nextRoomId == 4 && roomId == 0) && !dungeon.getSpecificRoom(
+                        nextRoomId).getKey().isKeyCollected()) {
                     setWarningMessage("Win other lvl's to unlock boss fight!");
                     return;
-                } else if ((nextRoomId > roomId || nextRoomId == 0 && roomId == 4) && !room.getKey().isKeyCollected()) { 
+                } else if ((nextRoomId > roomId || nextRoomId == 0 && roomId == 4) 
+                    && !room.getKey().isKeyCollected()) { 
                     setWarningMessage("Grab the key!");
                     return;
                 }

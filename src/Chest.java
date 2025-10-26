@@ -9,6 +9,11 @@ import javax.swing.*;
  * Creates a chest for the room in dungeon.
  * Can check if player is near and if it is collected.
  * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 
 public class Chest implements Sizes {

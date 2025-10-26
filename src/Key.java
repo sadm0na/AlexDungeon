@@ -7,9 +7,14 @@ import javax.swing.*;
  * Creates a key for the room in dungeon.
  * Can check if player is near and if it is collected.
  * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 
-public class Key implements Sizes{
+public class Key implements Sizes {
     private double x;
     private double y;
     private boolean isCollected;

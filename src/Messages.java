@@ -4,6 +4,12 @@ import java.awt.*;
 
 /**
  * Handles drawing of UI messages and speech bubbles in the game.
+ * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 public class Messages implements Sizes {
 
@@ -52,11 +58,12 @@ public class Messages implements Sizes {
      * Displays a message on screen at top or bottom position.
      * Mode 0 for top, mode 1 for bottom placement.
      */
-    public static void showMessage(Graphics g, String message, int screenWidth, int screenHeight, int mode) {
+    public static void showMessage(Graphics g, String message, int screenWidth, 
+        int screenHeight, int mode) {
         Graphics2D g2d = (Graphics2D) g;
         
         Color originalColor = g2d.getColor();
-        Font originalFont = g2d.getFont();
+        
         
         Font warningFont = new Font("Monospaced", Font.BOLD, 22);
         g2d.setFont(warningFont);
@@ -94,8 +101,10 @@ public class Messages implements Sizes {
         // Draw message text
         g2d.setColor(Color.WHITE);
         g2d.drawString(message, x, y - 3);
-        
         g2d.setColor(originalColor);
+
+        Font originalFont = g2d.getFont();
+
         g2d.setFont(originalFont);
     }
 }

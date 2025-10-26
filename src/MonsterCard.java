@@ -8,6 +8,11 @@ import javax.swing.*;
  * Card mith the monster, inherits from Cards.
  * Has a constructer with setting the image, hp and sword.
  * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 
 class MonsterCard extends Cards {

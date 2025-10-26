@@ -4,6 +4,11 @@ package src;
  * Is used to change coordinates (x,y) in matrix to one coordinate in one-simention array.
  * Only used in mini-game.
  * 
+ * @author Monika Khachatryan
+ * @ID 2276380
+ * @author Caroline Savchenko
+ * @ID 2338793
+ * 
  */
 
 class Coordinates {
