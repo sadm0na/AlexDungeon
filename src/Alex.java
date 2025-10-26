@@ -6,6 +6,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+/**
+ * Represents the main character Alex in the game.
+ * Handles movement, drawing, and position updates.
+ */
 public class Alex implements Sizes {
     private ImageIcon alexImage;
     private double x;
@@ -23,12 +27,14 @@ public class Alex implements Sizes {
     
         alexImage = new ImageIcon(ImageIO.read(new File(PathFinder.findFile(
             "misc/Alex/Alex2.png"))));
-        
     }
     
+    /**
+     * Draws Alex on the screen at current position.
+     */
     public void draw(Graphics g) {
         Image ai = alexImage.getImage();
-        ai = ai.getScaledInstance((int) (ALEX_WIDTH* WHOLE_SCREEN_W), 
+        ai = ai.getScaledInstance((int) (ALEX_WIDTH * WHOLE_SCREEN_W), 
             (int) (ALEX_HEIGHT * WHOLE_SCREEN_H), Image.SCALE_DEFAULT);
         g.drawImage(ai, (int) (x * WHOLE_SCREEN_W), (int) (y * WHOLE_SCREEN_H), null);
     }
@@ -57,13 +63,15 @@ public class Alex implements Sizes {
         yRunningDirection = 0;
     }
     
+    /**
+     * Updates Alex's position based on movement direction and time.
+     */
     public void update(long timeDifference) {
         double newX = x;
         double newY = y;
         
         newX += timeDifference * runningSpeed * xRunningDirection;
         newY += timeDifference * runningSpeed * yRunningDirection;
- 
 
         if (newX >= BORDER_LEFT_INNER && newX <= BORDER_REIGHT_INNER - ALEX_WIDTH) {
             x = newX;
@@ -86,6 +94,9 @@ public class Alex implements Sizes {
         return y;
     }
     
+    /**
+     * Sets Alex to a new position and stops movement.
+     */
     public void setPosition(double x, double y) { 
         this.x = x;
         this.y = y;

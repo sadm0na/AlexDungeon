@@ -3,7 +3,11 @@ package src;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomData implements Sizes{ // сюда надо будет засунуть и сундуки и ключики
+/**
+ * Represents a room in the dungeon with doors, keys,chests 
+ * and paths to background, room, minimap images.
+ */
+public class RoomData implements Sizes {
     private String backgroundPath;
     private double playerStartX;
     private double playerStartY;
@@ -28,6 +32,9 @@ public class RoomData implements Sizes{ // сюда надо будет засу
         doors.add(door);
     }
 
+    /**
+     * Adds a key at random position near walls, avoiding doors.
+     */
     public void addKey() {
         double[] position = getRandomKeyPosition();
         this.key = new Key(position[0], position[1]);
@@ -69,52 +76,51 @@ public class RoomData implements Sizes{ // сюда надо будет засу
         return visited;
     }
     
-    public void setVisited(boolean visited) { // посетили комнату только когда карточная игра пройдена
+    public void setVisited(boolean visited) {
         this.visited = visited;
     }
 
-    // рандомная координата вблизи стены
-    private double[] getRandomKeyPosition() { // {320, 325}
-        double[] d = {0.1, 0.2};
-        //return d;
-        
-        double[][][] walls = {{{BORDER_LEFT, BORDER_LEFT_INNER}, {BORDER_UP, BORDER_DOWN}},
+    /**
+     * Returns random key position near walls while avoiding door areas.
+     */
+    private double[] getRandomKeyPosition() {
+        // Set wall boundaries for x and y: left, top, right, bottom walls
+        double[][][] walls = {
+            {{BORDER_LEFT, BORDER_LEFT_INNER}, {BORDER_UP, BORDER_DOWN}},
             {{BORDER_LEFT, BORDER_REIGHT}, {BORDER_UP, BORDER_UP_INNER}}, 
-            {{BORDER_REIGHT, BORDER_REIGHT_INNER },  {BORDER_UP, BORDER_DOWN}}, 
-            {{BORDER_LEFT, BORDER_REIGHT}, {BORDER_DOWN, BORDER_DOWN_INNER }}}; // когда размеры фрема поменяются это надо будет изменить
+            {{BORDER_REIGHT, BORDER_REIGHT_INNER}, {BORDER_UP, BORDER_DOWN}}, 
+            {{BORDER_LEFT, BORDER_REIGHT}, {BORDER_DOWN, BORDER_DOWN_INNER}}
+        };
+        
         boolean isSpaceAvailable = false;
-        double[] keyPosiiton = new double[2];
-        double xMin, xMax, yMin, yMax;
+        double[] keyPosition = new double[2];
 
         while (!isSpaceAvailable) {
             isSpaceAvailable = true;
-            // выберет стену
+            
+            // Select random wall
             int wallNumber = (int) (Math.random() * 4);
+            double xMin = walls[wallNumber][0][0];
+            double xMax = walls[wallNumber][0][1];
+            double yMin = walls[wallNumber][1][0];
+            double yMax = walls[wallNumber][1][1];
 
-            // минимальная и максимальные значения координат стены
-            xMin = walls[wallNumber][0][0];
-            xMax = walls[wallNumber][0][1];
+            // Generate random position on selected wall
+            keyPosition[0] = rnd(Math.min(xMin, xMax), Math.max(xMax, xMin));
+            keyPosition[1] = rnd(Math.min(yMin, yMax), Math.max(yMax, yMin));
 
-            yMin = walls[wallNumber][1][0];
-            yMax = walls[wallNumber][1][1];
-
-            // рандомная координата на стене
-            keyPosiiton[0] = rnd(Math.min(xMin, xMax), Math.max(xMax, xMin));
-            keyPosiiton[1] = rnd(Math.min(yMin, yMax), Math.max(yMax, yMin));
-
-            // провека есть ли в этой зоне дверь
+            // Check if position conflicts with any door
             for (Door door: doors) {
-                if (door.isObjectNear(keyPosiiton[0], keyPosiiton[1])) {
+                if (door.isObjectNear(keyPosition[0], keyPosition[1])) {
                     isSpaceAvailable = false;
                     break;
                 }
             }
         }
 
-        return keyPosiiton;
+        return keyPosition;
     }
 
-    // рандомное число в пределах минимального максимального числа
     private static double rnd(double min, double max) {
         return (Math.random() * (max - min) + min);
     }

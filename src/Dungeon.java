@@ -138,14 +138,16 @@ public class Dungeon implements Sizes {
     }
 
     /**
-     * 
+     * Changes the current room to a new room.
+     * Handles room transitions and card game initialization for new rooms.
      */
     public void changeRoom(int newRoomId) throws IOException {
         rooms[currentRoomId].setVisited(true);
         
+        // for the last room (treasury) the mini-game won't be called.
         if ((newRoomId == 5 && accessTreasury) || rooms[newRoomId].isVisited()) {
-            currentRoomId = newRoomId;
-            panel.loadCurrentRoom();
+            currentRoomId = newRoomId; 
+            panel.loadCurrentRoom(); 
         } else {
             int lvl = currentRoomId + 1;
             Game game = new Game(lvl, health, strength);
@@ -156,22 +158,23 @@ public class Dungeon implements Sizes {
             }
         }        
     }
-    
+
     public int getCurrentRoomId() {
         return currentRoomId;
     }
-    
+
     /**
-     * 
+     * Starts the main game loop.
+     * Continuously repaints the frame and updates game physics.
      */
     public void start() throws InterruptedException {
         while (true) { // Main processing cycle.
             frame.repaint();
             panel.updateWorldPhysics();
-            Thread.sleep(16); // Restriction of FPS.
+            Thread.sleep(16); // FPS restriction.
         }
     }
-    
+
     public static void main(String[] args) throws IOException, InterruptedException {
         Dungeon dungeon = new Dungeon();
         dungeon.start();

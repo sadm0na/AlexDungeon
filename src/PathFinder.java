@@ -2,7 +2,14 @@ package src;
 
 import java.io.File;
 
+/**
+ * Finds files in different directory structures for flexible project setup.
+ */
 public class PathFinder {
+    
+    /**
+     * Locates file by checking direct path and parent directory.
+     */
     public static String findFile(String path) {
         File file = new File(path);
         if (file.exists()) {
@@ -14,6 +21,6 @@ public class PathFinder {
             return "../" + path;
         }
 
-        return "File wasn't found!"; // вот это конечно опасный трюк 
+        return "File wasn't found!"; 
     }
 }
